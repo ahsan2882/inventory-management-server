@@ -9,6 +9,7 @@ import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
 import categoriesRouter from "./routes/categories";
 import componentsRouter from "./routes/components";
+import validationRouter from "./routes/validationRoutes";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/", indexRouter);
 app.use("/api/user", usersRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/components", componentsRouter);
+app.use("/api/validate", validationRouter);
 
 // catch 404 and forward to error handler
 app.use((req: Request, res: Response, next: NextFunction) => {
