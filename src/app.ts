@@ -10,6 +10,7 @@ import usersRouter from "./routes/users";
 import categoriesRouter from "./routes/categories";
 import componentsRouter from "./routes/components";
 import validationRouter from "./routes/validationRoutes";
+import { scheduleRemoval } from "./scheduler";
 
 const app = express();
 
@@ -45,5 +46,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.status(err.status || 500);
   res.render("error");
 });
+
+scheduleRemoval();
 
 export default app;

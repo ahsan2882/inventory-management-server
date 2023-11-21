@@ -133,7 +133,7 @@ export const validateUserEmail = async (
   }
 };
 
-const isCodeExpired = (timestamp: number): boolean => {
+export const isCodeExpired = (timestamp: number): boolean => {
   if (Date.now() - timestamp > 900000) {
     return true;
   }
