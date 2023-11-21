@@ -160,10 +160,10 @@ export const validateCodeFromUser = async (
         console.log("Verified removing form DB");
         await removeCodeFromDB(storedCode);
         res.status(200).json({ validated: true });
+      } else if (isCodeExpired(storedCode.timestamp)) {
+        res.status(200).json({ validated: false, expired: true });
       } else {
-        res
-          .status(400)
-          .json({ message: "Validation failed. Invalid or expired code." });
+        res.status(200).json({ validated: false, expired: false });
       }
     }
   } catch (error) {

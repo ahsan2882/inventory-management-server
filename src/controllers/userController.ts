@@ -49,41 +49,92 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+export const checkUserNameInDB = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { userName } = req.body;
+    if (!!userName) {
+      const userNameQuery = await db
+        .collection("users")
+        .where("userName", "==", userName)
+        .get();
+      if (!userNameQuery.empty) {
+        res.status(200).json({ exists: true });
+        return;
+      } else {
+        res.status(200).json({ exists: false });
+      }
+    } else {
+      res.status(400).json({ message: "no username provided" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const checkEmailInDB = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { email } = req.body;
+    if (!!email) {
+      const emailQuery = await db
+        .collection("users")
+        .where("email", "==", email)
+        .get();
+      if (!emailQuery.empty) {
+        res.status(200).json({ exists: true });
+        return;
+      } else {
+        res.status(200).json({ exists: false });
+      }
+    } else {
+      res.status(400).json({ message: "no email provided" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 export const signup = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, fullName, password, userName } = req.body;
-    const userCollection = db.collection("users");
-    const userNameQuery = await userCollection
-      .where("username", "==", userName)
-      .get();
-    if (!userNameQuery.empty) {
-      res.status(400).json({ error: "Username already exists" });
-      return;
+    if (!!email && !!fullName && !!password && !!userName) {
+      const userCollection = db.collection("users");
+      const saltRounds = 10;
+      const hash = await bcrypt.hash(password, saltRounds);
+      const newUserInfo: User = {
+        email,
+        fullName,
+        password: hash,
+        userName,
+        isLoggedIn: true,
+        lastActiveTimestamp: Date.now(),
+      };
+      const newUserRef = await userCollection.add(newUserInfo);
+      const token = jwt.sign({ userId: newUserRef.id }, SECRET_JWT_TOKEN, {
+        expiresIn: "1h",
+      });
+      res.status(201).json({
+        message: "New user signed up",
+        id: newUserRef.id,
+        token,
+      });
+    } else {
+      const missingFields: string[] = [];
+      if (!email) missingFields.push("email");
+      if (!fullName) missingFields.push("fullName");
+      if (!password) missingFields.push("password");
+      if (!userName) missingFields.push("userName");
+      res.status(400).json({
+        error: `Please provide the following values: ${missingFields.join(
+          ", "
+        )}`,
+      });
     }
-    const emailQuery = await userCollection.where("email", "==", email).get();
-    if (!emailQuery.empty) {
-      res.status(400).json({ error: "Email already exists" });
-      return;
-    }
-    const saltRounds = 10;
-    const hash = await bcrypt.hash(password, saltRounds);
-    const newUserInfo: User = {
-      email,
-      fullName,
-      password: hash,
-      userName,
-      isLoggedIn: true,
-      lastActiveTimestamp: Date.now(),
-    };
-    const newUserRef = await userCollection.add(newUserInfo);
-    const token = jwt.sign({ userId: newUserRef.id }, SECRET_JWT_TOKEN, {
-      expiresIn: "1h",
-    });
-    res.status(201).json({
-      message: "New user signed up",
-      id: newUserRef.id,
-      token,
-    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
