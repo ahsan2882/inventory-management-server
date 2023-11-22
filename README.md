@@ -1,5 +1,7 @@
 # Inventory Management System API
 
+
+## The README is a work in progress, it is open for updates, you can submit a Pull Request, or I will find time to update in chunks
 This Node.js Express server handles API requests for an Inventory Management System. Users can sign up, log in, manage their inventory, and customize its structure.
 
 ## Table of Contents
