@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { SECRET_JWT_TOKEN } from "../firebaseConfig";
 
 export const authenticateToken = (
   req: Request,
@@ -13,7 +12,7 @@ export const authenticateToken = (
     return res.status(401).json({ message: "Unauthorized: Token missing" });
   }
 
-  jwt.verify(token, SECRET_JWT_TOKEN, (err, decoded) => {
+  jwt.verify(token, process.env.SECRET_JWT_TOKEN, (err, decoded) => {
     if (err) {
       return res.status(403).json({ message: "Unauthorized: Invalid token" });
     }

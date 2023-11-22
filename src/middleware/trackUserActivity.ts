@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { getUser, updateLastActivity } from "../controllers/userController";
 import jwt from "jsonwebtoken";
-import { SECRET_JWT_TOKEN } from "../firebaseConfig";
 
 export const trackUserActivity = async (
   req: Request,
@@ -10,7 +9,7 @@ export const trackUserActivity = async (
 ) => {
   try {
     const token = req.headers.authorization;
-    const decodedToken = jwt.verify(token, SECRET_JWT_TOKEN) as {
+    const decodedToken = jwt.verify(token, process.env.SECRET_JWT_TOKEN) as {
       userId: string;
     };
     if (decodedToken && decodedToken.userId) {

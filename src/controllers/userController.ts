@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import db, { SECRET_JWT_TOKEN } from "../firebaseConfig";
+import db from "../firebaseConfig";
 import User from "../models/User";
 import bcrypt from "bcrypt";
 import { firestore } from "firebase-admin";
@@ -28,9 +28,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const hashedPassword = user.password;
     const passwordMatch = await bcrypt.compare(password, hashedPassword);
     if (passwordMatch) {
-      const token = jwt.sign({ userId: userDoc.id }, SECRET_JWT_TOKEN, {
-        expiresIn: "1h",
-      });
+      const token = jwt.sign(
+        { userId: userDoc.id },
+        process.env.SECRET_JWT_TOKEN,
+        {
+          expiresIn: "1h",
+        }
+      );
       const updatedStatus: Partial<User> = {
         isLoggedIn: true,
         lastActiveTimestamp: Date.now(),
@@ -115,9 +119,13 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
         lastActiveTimestamp: Date.now(),
       };
       const newUserRef = await userCollection.add(newUserInfo);
-      const token = jwt.sign({ userId: newUserRef.id }, SECRET_JWT_TOKEN, {
-        expiresIn: "1h",
-      });
+      const token = jwt.sign(
+        { userId: newUserRef.id },
+        process.env.SECRET_JWT_TOKEN,
+        {
+          expiresIn: "1h",
+        }
+      );
       res.status(201).json({
         message: "New user signed up",
         id: newUserRef.id,

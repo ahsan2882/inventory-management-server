@@ -4,6 +4,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import cors from "cors";
+import dotenv from "dotenv";
 
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
@@ -11,6 +12,8 @@ import categoriesRouter from "./routes/categories";
 import componentsRouter from "./routes/components";
 import validationRouter from "./routes/validationRoutes";
 import { scheduleRemoval } from "./scheduler";
+
+dotenv.config();
 
 const app = express();
 
