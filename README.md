@@ -119,11 +119,9 @@ Contributions are welcome! Please follow the [contribution guidelines](CONTRIBUT
 
 This project is licensed under the [MIT License](LICENSE).
 
+      mamba create --name my-dirac-env -c conda-forge dirac-grid
+     conda activate my-dirac-env
 
-Certainly! Below is a detailed README.md file for your Express server project using TypeScript, Firebase Firestore, and related to an inventory management system. Please replace placeholder values with your actual project details.
-
-markdown
-Copy code
 # Inventory Management System API
 
 ## Table of Contents
