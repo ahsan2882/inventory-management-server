@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { GeneratedCode } from "../models/ValidationCode";
 import { DocumentData } from "@google-cloud/firestore";
 import nodemailer from "nodemailer";
+import he from "he";
 
 const generateRandomDigits = (): string => {
   let result = "";
@@ -40,6 +41,8 @@ const sendValidationCodeEmail = async (
       pass: "dbcfyurfzwmpprld", // Your Gmail password or App Password if using 2FA
     },
   });
+  const escapedFullName = he.encode(fullName);
+  const escapedCode = he.encode(code);
   const mailOptions = {
     from: "masinventorymaster@gmail.com",
     to: email,
@@ -79,9 +82,9 @@ const sendValidationCodeEmail = async (
       </head>
       <body>
         <div class="container">
-            <h2>Hi ${fullName}!</h2>
+            <h2>Hi ${escapedFullName}!</h2>
             <p>Please enter the following code to validate your email:</p>
-            <p class="code">${code}</p>
+            <p class="code">${escapedCode}</p>
             <p>Thank you</p>
         </div>
       </body>
