@@ -7,19 +7,38 @@ import {
 } from "../controllers/componentsController";
 import { authenticateToken } from "../middleware/authMiddleware";
 import { trackUserActivity } from "../middleware/trackUserActivity";
+import { limiter } from "../middleware/rateLimiter";
 
 const router = express.Router();
 
 // GET components by category and/or subcategory
-router.get("/", authenticateToken, trackUserActivity, getComponentsByCategory);
+router.get(
+  "/",
+  limiter,
+  authenticateToken,
+  trackUserActivity,
+  getComponentsByCategory
+);
 
 // POST to add a new component
-router.post("/", authenticateToken, trackUserActivity, addComponent);
+router.post("/", limiter, authenticateToken, trackUserActivity, addComponent);
 
 // PUT/PATCH to update a component
-router.put("/:id", authenticateToken, trackUserActivity, updateComponent); // Use PUT for full updates, PATCH for partial updates
+router.put(
+  "/:id",
+  limiter,
+  authenticateToken,
+  trackUserActivity,
+  updateComponent
+); // Use PUT for full updates, PATCH for partial updates
 
 // DELETE a component
-router.delete("/:id", authenticateToken, trackUserActivity, deleteComponent);
+router.delete(
+  "/:id",
+  limiter,
+  authenticateToken,
+  trackUserActivity,
+  deleteComponent
+);
 
 export default router;

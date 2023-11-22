@@ -1,6 +1,7 @@
 import express from "express";
 import { authenticateToken } from "../middleware/authMiddleware";
 import { trackUserActivity } from "../middleware/trackUserActivity";
+import { limiter } from "../middleware/rateLimiter";
 import {
   createCategory,
   getParentCategories,
@@ -9,16 +10,23 @@ import {
 
 const router = express.Router();
 
-router.get("/", authenticateToken, trackUserActivity, getParentCategories);
+router.get(
+  "/",
+  limiter,
+  authenticateToken,
+  trackUserActivity,
+  getParentCategories
+);
 
 router.get(
   "/:parentCategoryID",
+  limiter,
   authenticateToken,
   trackUserActivity,
   getSubcategoriesByParentID
 );
 
-router.post("/", authenticateToken, trackUserActivity, createCategory);
+router.post("/", limiter, authenticateToken, trackUserActivity, createCategory);
 
 // router.post(
 //   "/:parentCategoryID/subcategories",
