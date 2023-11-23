@@ -1,22 +1,25 @@
-import createError from "http-errors";
-import express, { Request, Response, NextFunction } from "express";
 import path from "path";
-import cookieParser from "cookie-parser";
-import logger from "morgan";
 import cors from "cors";
+import logger from "morgan";
 import dotenv from "dotenv";
+import createError from "http-errors";
+import cookieParser from "cookie-parser";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swaggerDoc.json";
+import express, { Request, Response, NextFunction } from "express";
 
-import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
 import categoriesRouter from "./routes/categories";
 import componentsRouter from "./routes/components";
 import validationRouter from "./routes/validationRoutes";
+
 import { scheduleRemoval } from "./scheduler";
 
 dotenv.config();
 
 const app = express();
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
@@ -28,7 +31,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
 app.use("/api/user", usersRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/components", componentsRouter);
