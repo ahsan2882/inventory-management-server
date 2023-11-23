@@ -1,5 +1,6 @@
 # Inventory Management System API
 
+[![CodeFactor](https://www.codefactor.io/repository/github/ahsan2882/inventory-management-server/badge)](https://www.codefactor.io/repository/github/ahsan2882/inventory-management-server)
 
 #### The README is a work in progress, it is open for updates, you can submit a Pull Request, or I will find time to update in chunks
 
