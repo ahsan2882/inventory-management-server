@@ -10,7 +10,7 @@ export const getParentCategories = async (
   try {
     const parentCategoriesSnapshot = await db
       .collection("categories")
-      .where("isTopLevel", "==", true)
+      .where("parentCategoryID", "==", "")
       .get();
 
     const parentCategories: Category[] = parentCategoriesSnapshot.docs.reduce<
@@ -18,8 +18,8 @@ export const getParentCategories = async (
     >((acc, doc: DocumentData) => {
       const data = doc.data() as Category;
       if (data) {
-        const { categoryName, isTopLevel, parentCategoryID } = data;
-        acc.push({ id: doc.id, categoryName, isTopLevel, parentCategoryID });
+        const { categoryName, parentCategoryID } = data;
+        acc.push({ id: doc.id, categoryName, parentCategoryID });
       }
       return acc;
     }, []);
@@ -48,8 +48,8 @@ export const getSubcategoriesByParentID = async (
       >((acc, doc: DocumentData) => {
         const data = doc.data() as Category;
         if (data) {
-          const { categoryName, isTopLevel, parentCategoryID } = data;
-          acc.push({ id: doc.id, categoryName, isTopLevel, parentCategoryID });
+          const { categoryName, parentCategoryID } = data;
+          acc.push({ id: doc.id, categoryName, parentCategoryID });
         }
         return acc;
       }, []);
@@ -73,9 +73,9 @@ export const createCategory = async (
     let newCategory: Category;
     if (!!categoryName) {
       if (!parentCategoryID) {
-        newCategory = { categoryName, parentCategoryID: "", isTopLevel: true };
+        newCategory = { categoryName, parentCategoryID: "" };
       } else {
-        newCategory = { categoryName, parentCategoryID, isTopLevel: false };
+        newCategory = { categoryName, parentCategoryID };
       }
       const newCategoryRef = await db.collection("categories").add(newCategory);
       res.status(201).json({
@@ -127,7 +127,7 @@ export const deleteCategory = async (
     }
 
     const subcategoryData = subcategoryDoc.data() as Category;
-    if (!subcategoryData.isTopLevel) {
+    if (!subcategoryData.parentCategoryID) {
       await categoryRef.delete();
       res.status(200).json({ message: "Subcategory deleted successfully" });
     } else {

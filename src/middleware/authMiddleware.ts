@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-export const authenticateToken = (
+export const authenticateToken = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -12,13 +12,14 @@ export const authenticateToken = (
     return res.status(401).json({ message: "Unauthorized: Token missing" });
   }
 
-  jwt.verify(token, process.env.SECRET_JWT_TOKEN, (err, decoded) => {
+  jwt.verify(token, process.env.SECRET_JWT_TOKEN, async (err, decoded) => {
     if (err) {
-      return res.status(403).json({ message: "Unauthorized: Invalid token" });
+      return res.status(403).json({
+        message: "Unauthorized: Invalid token",
+        tokenInvalidated: true,
+      });
     }
 
-    // Attach user information to request object for further processing
-    req["user"] = decoded;
     next();
   });
 };

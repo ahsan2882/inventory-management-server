@@ -35,17 +35,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
           expiresIn: "1h",
         }
       );
-      const updatedStatus: Partial<User> = {
-        isLoggedIn: true,
-        lastActiveTimestamp: Date.now(),
-      };
-
-      await userDoc.ref.update(updatedStatus);
-      res
-        .status(200)
-        .json({ message: "Login successful", userId: userDoc.id, token });
+      res.status(200).json({ message: "Login successful", token });
     } else {
-      res.status(401).json({ error: "Incorrect password" });
+      res.status(401).json({ error: "Incorrect userName or password" });
     }
   } catch (error) {
     console.error(error);
@@ -115,8 +107,6 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
         fullName,
         password: hash,
         userName,
-        isLoggedIn: true,
-        lastActiveTimestamp: Date.now(),
       };
       const newUserRef = await userCollection.add(newUserInfo);
       const token = jwt.sign(
@@ -185,17 +175,5 @@ export const getUser = async (userId: string): Promise<User> => {
     return null;
   } catch (error) {
     throw new Error("Failed to fetch user data");
-  }
-};
-
-export const updateLastActivity = async (userId: string): Promise<void> => {
-  try {
-    const currentTime = Date.now();
-    await db
-      .collection("users")
-      .doc(userId)
-      .update({ lastActiveTimestamp: currentTime });
-  } catch (error) {
-    throw new Error("Failed to update last activity");
   }
 };
