@@ -51,7 +51,7 @@ export const checkUserNameInDB = async (
 ): Promise<void> => {
   try {
     const { userName } = req.body;
-    if (!!userName) {
+    if (userName) {
       const userNameQuery = await db
         .collection("users")
         .where("userName", "==", userName)
@@ -76,7 +76,7 @@ export const checkEmailInDB = async (
 ): Promise<void> => {
   try {
     const { email } = req.body;
-    if (!!email) {
+    if (email) {
       const emailQuery = await db
         .collection("users")
         .where("email", "==", email)
@@ -144,6 +144,7 @@ export const changePassword = async (
   res: Response
 ): Promise<void> => {
   try {
+    res.status(200);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -155,6 +156,7 @@ export const deleteAccount = async (
   res: Response
 ): Promise<void> => {
   try {
+    res.status(200);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -163,6 +165,7 @@ export const deleteAccount = async (
 
 export const signout = async (req: Request, res: Response): Promise<void> => {
   try {
+    res.status(200);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }

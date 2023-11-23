@@ -153,7 +153,7 @@ export const validateCodeFromUser = async (
 ): Promise<void> => {
   try {
     const { email, code } = req.body;
-    if (!!email) {
+    if (email) {
       const storedCode: GeneratedCode = await retrieveValidationCode(email);
       if (
         storedCode &&

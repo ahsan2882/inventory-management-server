@@ -1,6 +1,6 @@
 interface Category {
   id?: string;
   categoryName: string;
-  parentCategoryID: string | null;
+  parentCategoryID: string;
 }
 export default Category;

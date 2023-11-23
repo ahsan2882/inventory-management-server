@@ -2,7 +2,7 @@ import path from "path";
 import cors from "cors";
 import logger from "morgan";
 import dotenv from "dotenv";
-import createError from "http-errors";
+import createError, { HttpError } from "http-errors";
 import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swaggerDoc.json";
@@ -33,7 +33,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/user", usersRouter);
 app.use("/api/categories", categoriesRouter);
-app.use("/api/components", componentsRouter);
 app.use("/api/validate", validationRouter);
 
 // catch 404 and forward to error handler
@@ -42,7 +41,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 // error handler
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err: HttpError, req: Request, res: Response) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};

@@ -5,17 +5,21 @@ import { DocumentData } from "firebase/firestore";
 import { isCodeExpired } from "./controllers/validationController";
 
 const removeExpiredUnusedCodes = async () => {
-  const generatedCodes = (await db.collection("generatedCodes").get()).docs.map(
-    (doc: DocumentData) => ({
-      id: doc.id,
-      ...(doc.data() as GeneratedCode),
-    })
-  );
-  generatedCodes.forEach(async (code: GeneratedCode) => {
-    if (isCodeExpired(code.timestamp)) {
-      await db.collection("generatedCodes").doc(code.id).delete();
-    }
-  });
+  const generatedCodeCollection = await db.collection("generatedCodes").get();
+  if (generatedCodeCollection.docs.length > 0) {
+    const generatedCodes = generatedCodeCollection.docs.map(
+      (doc: DocumentData) => ({
+        id: doc.id,
+        ...(doc.data() as GeneratedCode),
+      })
+    );
+
+    generatedCodes.forEach(async (code: GeneratedCode) => {
+      if (isCodeExpired(code.timestamp)) {
+        await db.collection("generatedCodes").doc(code.id).delete();
+      }
+    });
+  }
 };
 
 export const scheduleRemoval = () => {

@@ -71,7 +71,7 @@ export const createCategory = async (
   try {
     const { categoryName, parentCategoryID } = req.body;
     let newCategory: Category;
-    if (!!categoryName) {
+    if (categoryName) {
       if (!parentCategoryID) {
         newCategory = { categoryName, parentCategoryID: "" };
       } else {
