@@ -2,15 +2,16 @@ import path from "path";
 import cors from "cors";
 import logger from "morgan";
 import dotenv from "dotenv";
-import createError, { HttpError } from "http-errors";
 import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
+import Honeybadger from "@honeybadger-io/js";
 import swaggerDocument from "./swaggerDoc.json";
+import createError, { HttpError } from "http-errors";
+
 import express, { Request, Response, NextFunction } from "express";
 
 import usersRouter from "./routes/users";
 import categoriesRouter from "./routes/categories";
-import componentsRouter from "./routes/components";
 import validationRouter from "./routes/validationRoutes";
 
 import { scheduleRemoval } from "./scheduler";
@@ -18,6 +19,12 @@ import { scheduleRemoval } from "./scheduler";
 dotenv.config();
 
 const app = express();
+
+Honeybadger.configure({
+  apiKey: "hbp_RYcv43BHD7Kb2ZpfMvuu3cFC8Bgcz32UnXK4",
+  environment: "production",
+});
+app.use(Honeybadger.requestHandler);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // view engine setup
@@ -50,6 +57,7 @@ app.use((err: HttpError, req: Request, res: Response) => {
   res.status(err.status || 500);
   res.render("error");
 });
+app.use(Honeybadger.requestHandler);
 
 scheduleRemoval();
 

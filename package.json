@@ -10,6 +10,7 @@
     "clean:watch": "nodemon --watch src -e ts,json,js --exec npm run clean:start"
   },
   "dependencies": {
+    "@honeybadger-io/js": "^6.6.1",
     "@types/dotenv": "^8.2.0",
     "@types/jsonwebtoken": "^9.0.5",
     "bcrypt": "^5.1.1",
