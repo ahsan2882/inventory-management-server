@@ -4,18 +4,16 @@ import { GeneratedCode } from "../models/ValidationCode";
 import { DocumentData } from "@google-cloud/firestore";
 import nodemailer from "nodemailer";
 import he from "he";
+import crypto from "crypto";
 
-const generateRandomDigits = (): string => {
-  let result = "";
-  const length = 8;
-  for (let i = 0; i < length; i++) {
-    result += Math.floor(Math.random() * 10); // Generate random digit from 0 to 9
-  }
-  return result;
+const generateRandomDigits = (length: number): string => {
+  const randomBytes = crypto.randomBytes(Math.ceil(length / 2));
+  const code = randomBytes.toString("hex").slice(0, length);
+  return code;
 };
 
 const generateAndStoreCode = async (email: string): Promise<GeneratedCode> => {
-  const code = generateRandomDigits();
+  const code = generateRandomDigits(8);
   const timestamp = Date.now();
   const codeRef = await db
     .collection("generatedCodes")
@@ -32,7 +30,7 @@ const generateAndStoreCode = async (email: string): Promise<GeneratedCode> => {
 const sendValidationCodeEmail = async (
   email: string,
   fullName: string,
-  code: string,
+  code: string
 ): Promise<boolean> => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -99,7 +97,7 @@ const sendValidationCodeEmail = async (
 };
 
 const retrieveValidationCode = async (
-  email: string,
+  email: string
 ): Promise<GeneratedCode> => {
   const generatedCodesSnapshot = await db
     .collection("generatedCodes")
@@ -110,19 +108,19 @@ const retrieveValidationCode = async (
     (doc: DocumentData) => ({
       id: doc.id,
       ...(doc.data() as GeneratedCode),
-    }),
+    })
   )[0];
   return generatedCode;
 };
 
 export const validateUserEmail = async (
   req: Request,
-  res: Response,
+  res: Response
 ): Promise<void> => {
   try {
     const { emailTo, fullName } = req.body;
     if (!!emailTo && !!fullName) {
-      const { code, timestamp } = await generateAndStoreCode(emailTo);
+      const { code } = await generateAndStoreCode(emailTo);
       const sent = await sendValidationCodeEmail(emailTo, fullName, code);
       res.status(200).json({
         sentEmail: sent,
@@ -149,7 +147,7 @@ const removeCodeFromDB = async (code: GeneratedCode): Promise<void> => {
 
 export const validateCodeFromUser = async (
   req: Request,
-  res: Response,
+  res: Response
 ): Promise<void> => {
   try {
     const { email, code } = req.body;
