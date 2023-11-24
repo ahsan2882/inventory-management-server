@@ -16,6 +16,6 @@ jobs:
           node-version: 20
 
       - run: npm ci
-      - run: npx prettier --write . --ignore=".github/**"
+      - run: npx prettier --write . "!.github/**"
 
       - uses: autofix-ci/action@d3e591514b99d0fca6779455ff8338516663f7cc
