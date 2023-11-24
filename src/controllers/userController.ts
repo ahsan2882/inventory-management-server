@@ -33,7 +33,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         process.env.SECRET_JWT_TOKEN,
         {
           expiresIn: "1h",
-        }
+        },
       );
       res.status(200).json({ message: "Login successful", token });
     } else {
@@ -47,7 +47,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 export const checkUserNameInDB = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { userName } = req.body;
@@ -72,7 +72,7 @@ export const checkUserNameInDB = async (
 
 export const checkEmailInDB = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { email } = req.body;
@@ -114,7 +114,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
         process.env.SECRET_JWT_TOKEN,
         {
           expiresIn: "1h",
-        }
+        },
       );
       res.status(201).json({
         message: "New user signed up",
@@ -129,7 +129,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       if (!userName) missingFields.push("userName");
       res.status(400).json({
         error: `Please provide the following values: ${missingFields.join(
-          ", "
+          ", ",
         )}`,
       });
     }
@@ -141,7 +141,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
 
 export const changePassword = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     res.status(200);
@@ -153,7 +153,7 @@ export const changePassword = async (
 
 export const deleteAccount = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     res.status(200);

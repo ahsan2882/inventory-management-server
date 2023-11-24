@@ -1,597 +1,585 @@
 {
-    "openapi": "3.0.3",
-    "info": {
-        "title": "API Docs",
-        "description": "custoom APPII DOOOOCS"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API Docs",
+    "description": "custoom APPII DOOOOCS"
+  },
+  "tags": [
+    {
+      "name": "user",
+      "description": "everything about your users"
     },
-    "tags": [
-        {
-            "name": "user",
-            "description": "everything about your users"
-        },
-        {
-            "name": "categories",
-            "description": "everything about categories"
-        },
-        {
-            "name": "validate",
-            "description": "validate data"
-        }
-    ],
-    "paths": {
-        "/api/user/signup": {
-            "post": {
-                "tags": [
-                    "user"
-                ],
-                "summary": "Sign up a new user",
-                "description": "Sign up a new user",
-                "operationId": "signupUser",
-                "requestBody": {
-                    "description": "user data to be added in the database",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserSignup"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "201": {
-                        "description": "User signup successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "New user signed up"
-                                        },
-                                        "id": {
-                                            "type": "string",
-                                            "example": "eff4gf44g4bgtt"
-                                        },
-                                        "token": {
-                                            "type": "string",
-                                            "example": "knonfon5bfoi4wnfo.4fi4ofb5o.rfmbf"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Please provide the following fields: userName, fullName, email, password"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Internal server error"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/user/login": {
-            "post": {
-                "tags": [
-                    "user"
-                ],
-                "summary": "Verify and login user",
-                "description": "Authenticate user with username/email and password",
-                "operationId": "loginUser",
-                "requestBody": {
-                    "description": "username/email and password",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserLogin"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Login successful"
-                                        },
-                                        "token": {
-                                            "type": "string",
-                                            "example": "knonfon5bfoi4wnfo.4fi4ofb5o.rfmbf"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Please provide userName or email"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Incorrect username or password"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "user not found"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Internal server error"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/user/availability/userName": {
-            "post": {
-                "tags": [
-                    "user"
-                ],
-                "summary": "Check if the username already exists in the DB",
-                "description": "When signing up new user, it is recommended to check if a user already exists with that username or not",
-                "operationId": "checkUserNameInDB",
-                "requestBody": {
-                    "description": "pass a username to check",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "userName": {
-                                        "type": "string",
-                                        "example": "theUser",
-                                        "required": true
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "exists": {
-                                            "type": "boolean",
-                                            "example": true
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Please provide userName"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Internal server error"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/user/availability/email": {
-            "post": {
-                "tags": [
-                    "user"
-                ],
-                "summary": "Check if the email already exists in the DB",
-                "description": "When signing up new user, it is recommended to check if a user already exists with that email or not",
-                "operationId": "checkEmailInDB",
-                "requestBody": {
-                    "description": "pass an email to check",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "example": "theUser@user.com",
-                                        "required": true
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "exists": {
-                                            "type": "boolean",
-                                            "example": true
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Please provide userName"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Internal server error"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/validate/email": {
-            "post": {
-                "tags": [
-                    "validate"
-                ],
-                "summary": "Validate the email exists and send a confirmation code",
-                "description": "When signing up new user, it is recommended to validate his email by sending an email containing a confirmation code to prove he has the email",
-                "operationId": "validateUserEmail",
-                "requestBody": {
-                    "description": "provide an email address and name to send an email to the user",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "emailTo": {
-                                        "type": "string",
-                                        "example": "theUser@user.com",
-                                        "required": true
-                                    },
-                                    "fullName": {
-                                        "type": "string",
-                                        "example": "The User",
-                                        "required": true
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "sentEmail": {
-                                            "type": "boolean",
-                                            "example": true
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Please provide email"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Internal server error"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/validate/code": {
-            "post": {
-                "tags": [
-                    "validate"
-                ],
-                "summary": "Validate the code the user entered from the email sent by '/api/validate/email'",
-                "description": "When signing up new user, it is recommended to validate his email by sending an email containing a confirmation code to prove he has the email",
-                "operationId": "validateCodeFromUser",
-                "requestBody": {
-                    "description": "provide user's email address and the code entered by the user",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "emailTo": {
-                                        "type": "string",
-                                        "example": "theUser@user.com",
-                                        "required": true
-                                    },
-                                    "code": {
-                                        "type": "string",
-                                        "example": "01234567",
-                                        "required": true
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "validated": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "expired": {
-                                            "type": "boolean",
-                                            "example": true
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Please provide email and code"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Internal server error"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    {
+      "name": "categories",
+      "description": "everything about categories"
     },
-    "components": {
-        "schemas": {
-            "UserSignup": {
-                "type": "object",
-                "properties": {
-                    "userName": {
-                        "type": "string",
-                        "example": "theUser",
-                        "required": true
-                    },
-                    "fullName": {
-                        "type": "string",
-                        "example": "The User",
-                        "required": true
-                    },
-                    "email": {
-                        "type": "string",
-                        "example": "theUser@user.com",
-                        "required": true
-                    },
-                    "password": {
-                        "type": "string",
-                        "example": "secureUser",
-                        "description": "The password will be hashed and then stored in the database to avoid security threats",
-                        "required": true
-                    }
-                },
-                "xml": {
-                    "name": "user"
-                }
-            },
-            "UserLogin": {
-                "type": "object",
-                "properties": {
-                    "userName": {
-                        "type": "string",
-                        "example": "theUser"
-                    },
-                    "email": {
-                        "type": "string",
-                        "example": "theUser@user.com"
-                    },
-                    "password": {
-                        "type": "string",
-                        "example": "secureUser",
-                        "description": "The password will be hashed and then stored in the database to avoid security threats",
-                        "required": true
-                    }
-                },
-                "xml": {
-                    "name": "user"
-                }
-            }
-        },
-        "securitySchemas": {
-            "token": {
-                "type": "token",
-                "name": "token",
-                "in": "header"
-            }
-        }
+    {
+      "name": "validate",
+      "description": "validate data"
     }
+  ],
+  "paths": {
+    "/api/user/signup": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Sign up a new user",
+        "description": "Sign up a new user",
+        "operationId": "signupUser",
+        "requestBody": {
+          "description": "user data to be added in the database",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserSignup"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "User signup successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "New user signed up"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "eff4gf44g4bgtt"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "knonfon5bfoi4wnfo.4fi4ofb5o.rfmbf"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Please provide the following fields: userName, fullName, email, password"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/login": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Verify and login user",
+        "description": "Authenticate user with username/email and password",
+        "operationId": "loginUser",
+        "requestBody": {
+          "description": "username/email and password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLogin"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Login successful"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "knonfon5bfoi4wnfo.4fi4ofb5o.rfmbf"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Please provide userName or email"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Incorrect username or password"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "user not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/availability/userName": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Check if the username already exists in the DB",
+        "description": "When signing up new user, it is recommended to check if a user already exists with that username or not",
+        "operationId": "checkUserNameInDB",
+        "requestBody": {
+          "description": "pass a username to check",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userName": {
+                    "type": "string",
+                    "example": "theUser",
+                    "required": true
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "exists": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Please provide userName"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/availability/email": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Check if the email already exists in the DB",
+        "description": "When signing up new user, it is recommended to check if a user already exists with that email or not",
+        "operationId": "checkEmailInDB",
+        "requestBody": {
+          "description": "pass an email to check",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "theUser@user.com",
+                    "required": true
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "exists": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Please provide userName"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/validate/email": {
+      "post": {
+        "tags": ["validate"],
+        "summary": "Validate the email exists and send a confirmation code",
+        "description": "When signing up new user, it is recommended to validate his email by sending an email containing a confirmation code to prove he has the email",
+        "operationId": "validateUserEmail",
+        "requestBody": {
+          "description": "provide an email address and name to send an email to the user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "emailTo": {
+                    "type": "string",
+                    "example": "theUser@user.com",
+                    "required": true
+                  },
+                  "fullName": {
+                    "type": "string",
+                    "example": "The User",
+                    "required": true
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sentEmail": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Please provide email"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/validate/code": {
+      "post": {
+        "tags": ["validate"],
+        "summary": "Validate the code the user entered from the email sent by '/api/validate/email'",
+        "description": "When signing up new user, it is recommended to validate his email by sending an email containing a confirmation code to prove he has the email",
+        "operationId": "validateCodeFromUser",
+        "requestBody": {
+          "description": "provide user's email address and the code entered by the user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "emailTo": {
+                    "type": "string",
+                    "example": "theUser@user.com",
+                    "required": true
+                  },
+                  "code": {
+                    "type": "string",
+                    "example": "01234567",
+                    "required": true
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "validated": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "expired": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Please provide email and code"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserSignup": {
+        "type": "object",
+        "properties": {
+          "userName": {
+            "type": "string",
+            "example": "theUser",
+            "required": true
+          },
+          "fullName": {
+            "type": "string",
+            "example": "The User",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "example": "theUser@user.com",
+            "required": true
+          },
+          "password": {
+            "type": "string",
+            "example": "secureUser",
+            "description": "The password will be hashed and then stored in the database to avoid security threats",
+            "required": true
+          }
+        },
+        "xml": {
+          "name": "user"
+        }
+      },
+      "UserLogin": {
+        "type": "object",
+        "properties": {
+          "userName": {
+            "type": "string",
+            "example": "theUser"
+          },
+          "email": {
+            "type": "string",
+            "example": "theUser@user.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "secureUser",
+            "description": "The password will be hashed and then stored in the database to avoid security threats",
+            "required": true
+          }
+        },
+        "xml": {
+          "name": "user"
+        }
+      }
+    },
+    "securitySchemas": {
+      "token": {
+        "type": "token",
+        "name": "token",
+        "in": "header"
+      }
+    }
+  }
 }

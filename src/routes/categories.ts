@@ -15,7 +15,7 @@ router.get(
   "/:parentCategoryID",
   limiter,
   authenticateToken,
-  getSubcategoriesByParentID
+  getSubcategoriesByParentID,
 );
 
 router.post("/", limiter, authenticateToken, createCategory);

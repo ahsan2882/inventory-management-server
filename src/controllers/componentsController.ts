@@ -6,7 +6,7 @@ import { DocumentData } from "@google-cloud/firestore";
 
 export const getComponentsByCategory = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const categoryID = (req.query.categoryID || req.query.c) as
@@ -35,7 +35,7 @@ export const getComponentsByCategory = async (
       componentsQuery = componentsQuery.where(
         "subCategoryID",
         "==",
-        subCategoryID
+        subCategoryID,
       );
     }
 
@@ -44,7 +44,7 @@ export const getComponentsByCategory = async (
       (doc: DocumentData) => ({
         id: doc.id,
         ...(doc.data() as Component),
-      })
+      }),
     );
 
     res.status(200).json(components);
@@ -56,7 +56,7 @@ export const getComponentsByCategory = async (
 
 export const addComponent = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const {
@@ -93,7 +93,7 @@ export const addComponent = async (
       if (!description) missingFields.push("description");
       res.status(400).json({
         error: `Please provide the following values: ${missingFields.join(
-          ", "
+          ", ",
         )}`,
       });
     }
@@ -105,7 +105,7 @@ export const addComponent = async (
 
 export const updateComponent = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { id } = req.params;
@@ -141,7 +141,7 @@ export const updateComponent = async (
 
 export const deleteComponent = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { id } = req.params;

@@ -5,7 +5,7 @@ import { DocumentData } from "firebase/firestore";
 
 export const getParentCategories = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const parentCategoriesSnapshot = await db
@@ -33,7 +33,7 @@ export const getParentCategories = async (
 
 export const getSubcategoriesByParentID = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { parentCategoryID } = req.params;
@@ -66,7 +66,7 @@ export const getSubcategoriesByParentID = async (
 
 export const createCategory = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { categoryName, parentCategoryID } = req.body;
@@ -114,7 +114,7 @@ export const createCategory = async (
 
 export const deleteCategory = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { id } = req.params; // Assuming the ID of the subcategory is passed in the request params

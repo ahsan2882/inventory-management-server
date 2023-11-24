@@ -4,7 +4,6 @@
 
 #### The README is a work in progress, it is open for updates, you can submit a Pull Request, or I will find time to update in chunks
 
-
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -45,49 +44,49 @@ Before you begin, ensure you have the following installed:
 ## Setup Guide
 
 1. **Clone the Repository:**
+
    ```bash
    git clone <repository_url>
    cd <repository_name>
    ```
 
 2. Install dependencies:
-npm install
-
-
+   npm install
 
 3. Configure Firebase:
+
 - Set up a Firebase project and configure Firestore.
 - Add Firebase configuration details to `config/firebaseConfig.js`.
 
 4. Start the server:
-npm start
+   npm start
 
 ## Project Structure
 
 inventory-management-api/
 |
 |-- config/
-|   |-- firebaseConfig.js
-|   +-- ...
+| |-- firebaseConfig.js
+| +-- ...
 |
 |-- controllers/
-|   |-- authController.js
-|   |-- inventoryController.js
-|   +-- ...
+| |-- authController.js
+| |-- inventoryController.js
+| +-- ...
 |
 |-- routes/
-|   |-- authRoutes.js
-|   |-- inventoryRoutes.js
-|   +-- ...
+| |-- authRoutes.js
+| |-- inventoryRoutes.js
+| +-- ...
 |
 |-- models/
-|   |-- User.js
-|   |-- Inventory.js
-|   +-- ...
+| |-- User.js
+| |-- Inventory.js
+| +-- ...
 |
 |-- middleware/
-|   |-- authMiddleware.js
-|   +-- ...
+| |-- authMiddleware.js
+| +-- ...
 |
 +-- index.js
 
@@ -168,7 +167,8 @@ Before you begin, ensure you have the following installed:
    ```bash
    git clone <repository_url>
    cd <repository_name>
-Install Dependencies:
+   Install Dependencies:
+   ```
 
 bash
 Copy code
@@ -209,12 +209,12 @@ models: Defines data models for Firestore.
 routes: Handles the routing for different API endpoints.
 index.ts: Entry point of the application.
 Endpoints Information
-Endpoint	Description	Method
-/api/login	User login	POST
-/api/signup	User signup	POST
-/api/inventory	Get user's inventory	GET
-/api/update-item	Update an inventory item	PUT
-/api/modify-structure	Modify inventory structure	POST
+Endpoint Description Method
+/api/login User login POST
+/api/signup User signup POST
+/api/inventory Get user's inventory GET
+/api/update-item Update an inventory item PUT
+/api/modify-structure Modify inventory structure POST
 Authentication
 The API uses Firebase Authentication for user authentication. Ensure that the Firebase credentials are set in the .env file.
 

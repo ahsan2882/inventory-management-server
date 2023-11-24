@@ -32,7 +32,7 @@ const generateAndStoreCode = async (email: string): Promise<GeneratedCode> => {
 const sendValidationCodeEmail = async (
   email: string,
   fullName: string,
-  code: string
+  code: string,
 ): Promise<boolean> => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -99,7 +99,7 @@ const sendValidationCodeEmail = async (
 };
 
 const retrieveValidationCode = async (
-  email: string
+  email: string,
 ): Promise<GeneratedCode> => {
   const generatedCodesSnapshot = await db
     .collection("generatedCodes")
@@ -110,14 +110,14 @@ const retrieveValidationCode = async (
     (doc: DocumentData) => ({
       id: doc.id,
       ...(doc.data() as GeneratedCode),
-    })
+    }),
   )[0];
   return generatedCode;
 };
 
 export const validateUserEmail = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { emailTo, fullName } = req.body;
@@ -149,7 +149,7 @@ const removeCodeFromDB = async (code: GeneratedCode): Promise<void> => {
 
 export const validateCodeFromUser = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { email, code } = req.body;
