@@ -5,7 +5,7 @@ const validationUtil = new ValidaionUtils();
 
 export const validateUserEmail = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<Response> => {
   try {
     const { emailTo, fullName } = req.body;
@@ -15,7 +15,7 @@ export const validateUserEmail = async (
       const sent = await validationUtil.sendVerificationEmail(
         emailTo,
         fullName,
-        code
+        code,
       );
       return res.status(200).json({
         sentEmail: sent,

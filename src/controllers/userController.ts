@@ -29,7 +29,7 @@ export const login = async (req: Request, res: Response) => {
         process.env.SECRET_JWT_TOKEN,
         {
           expiresIn: "1h",
-        }
+        },
       );
       return res.status(200).json({ token });
     } else {
@@ -109,7 +109,7 @@ export const signup = async (req: Request, res: Response) => {
       process.env.SECRET_JWT_TOKEN,
       {
         expiresIn: "1h",
-      }
+      },
     );
     return res.status(200).json({ userId: newUser.id, token });
   } catch (error) {

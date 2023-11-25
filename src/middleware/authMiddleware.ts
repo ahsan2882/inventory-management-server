@@ -6,7 +6,7 @@ const tokenBlacklist: string[] = [];
 export const authenticateToken = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const token = req.headers["authorization"];
 

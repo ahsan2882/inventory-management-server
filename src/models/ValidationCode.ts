@@ -31,7 +31,7 @@ export class ValidaionUtils {
   async sendVerificationEmail(
     email: string,
     fullName: string,
-    code: string
+    code: string,
   ): Promise<boolean> {
     const transporter = nodemailer.createTransport({
       service: "gmail",
