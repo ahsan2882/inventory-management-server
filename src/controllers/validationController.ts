@@ -36,7 +36,7 @@ export const validateCodeFromUser = async (req: Request, res: Response) => {
         await validationUtil.retrieveValidationCode(email);
       if (storedCodes.length) {
         const storedCode = storedCodes.find((storedCodeInDB) => {
-          storedCodeInDB.code === code;
+          return storedCodeInDB.code === code;
         });
         if (storedCode && !validationUtil.isCodeExpired(storedCode.timestamp)) {
           console.log("Verified removing form DB");
