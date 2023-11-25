@@ -36,7 +36,7 @@ export class CategoryUtils {
 
   private buildTree(
     categoryDB: CategoryDB,
-    categoryDocuments: CategoryDB[],
+    categoryDocuments: CategoryDB[]
   ): Category {
     const { categoryName, id, childCategories } = categoryDB;
     const node: Category = { label: categoryName, id, children: [] };
@@ -48,7 +48,7 @@ export class CategoryUtils {
         }
         return acc;
       },
-      [],
+      []
     );
 
     node.children = children;
@@ -58,21 +58,21 @@ export class CategoryUtils {
   async generateCategoryTree(): Promise<Category[]> {
     const categoryDocuments = await this.fetchCategories();
     const topLevelCategories = categoryDocuments.filter(
-      (doc) => doc.parentCategoryId === "",
+      (doc) => doc.parentCategoryId === ""
     );
     return topLevelCategories.map((category) =>
-      this.buildTree(category, categoryDocuments),
+      this.buildTree(category, categoryDocuments)
     );
   }
 
   async modifyCategories(
     additions: Partial<CategoryDB>[],
     updates: Partial<CategoryDB>[],
-    deletions: Partial<CategoryDB>[],
+    deletions: Partial<CategoryDB>[]
   ): Promise<Category[]> {
     const promises = [];
     if (additions.length > 0) {
-      let batch = this.categoryCollection.batch();
+      const batch = this.categoryCollection.batch();
       for (const addition of additions) {
         const { categoryName, parentCategoryId } = addition;
         const newCategoryRef = this.categoryCollectionRef.doc();
@@ -100,7 +100,7 @@ export class CategoryUtils {
           })
           .catch((err) => {
             console.log("Error adding categories:", err);
-          }),
+          })
       );
     }
     try {
@@ -140,7 +140,7 @@ export class CategoryUtils {
                       }
                       return acc;
                     },
-                    [],
+                    []
                   );
                   transaction.update(parentRef, {
                     childCategories: newChildIds,
@@ -150,7 +150,7 @@ export class CategoryUtils {
               }
             }
           }
-        }),
+        })
       );
     } catch (error) {
       console.log(error);
