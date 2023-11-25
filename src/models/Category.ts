@@ -36,7 +36,7 @@ export class CategoryUtils {
 
   private buildTree(
     categoryDB: CategoryDB,
-    categoryDocuments: CategoryDB[]
+    categoryDocuments: CategoryDB[],
   ): Category {
     const { categoryName, id, childCategories } = categoryDB;
     const node: Category = { label: categoryName, id, children: [] };
@@ -48,7 +48,7 @@ export class CategoryUtils {
         }
         return acc;
       },
-      []
+      [],
     );
 
     node.children = children;
@@ -58,16 +58,16 @@ export class CategoryUtils {
   async generateCategoryTree(): Promise<Category[]> {
     const categoryDocuments = await this.fetchCategories();
     const topLevelCategories = categoryDocuments.filter(
-      (doc) => doc.parentCategoryId === ""
+      (doc) => doc.parentCategoryId === "",
     );
     return topLevelCategories.map((category) =>
-      this.buildTree(category, categoryDocuments)
+      this.buildTree(category, categoryDocuments),
     );
   }
 
   private async addNewCategoryToBatch(
     addition: Partial<CategoryDB>,
-    batch: firestore.WriteBatch
+    batch: firestore.WriteBatch,
   ): Promise<void> {
     const { categoryName, parentCategoryId } = addition;
     const newCategoryRef = this.categoryCollectionRef.doc();
@@ -82,7 +82,7 @@ export class CategoryUtils {
         parentCategoryId,
         newCategoryRef.id,
         "add",
-        batch
+        batch,
       );
     }
   }
@@ -91,7 +91,7 @@ export class CategoryUtils {
     parentCategoryId: string,
     categoryId: string,
     operation: "add" | "delete",
-    transcationBatch: firestore.WriteBatch | firestore.Transaction
+    transcationBatch: firestore.WriteBatch | firestore.Transaction,
   ): Promise<void> {
     const parentRef = this.categoryCollectionRef.doc(parentCategoryId);
     const parentSnapshot = await parentRef.get();
@@ -139,21 +139,21 @@ export class CategoryUtils {
   }
 
   private async updateCategoriesBulk(
-    updates: Partial<CategoryDB>[]
+    updates: Partial<CategoryDB>[],
   ): Promise<void> {
     const updatePromise = this.categoryCollection.runTransaction(
       async (transaction) => {
         for (const update of updates) {
           await this.updateCategory(update, transaction);
         }
-      }
+      },
     );
     return updatePromise;
   }
 
   private async updateCategory(
     update: Partial<CategoryDB>,
-    transaction: firestore.Transaction
+    transaction: firestore.Transaction,
   ): Promise<void> {
     const { id, categoryName } = update;
     const categoryRef = this.categoryCollectionRef.doc(id);
@@ -165,7 +165,7 @@ export class CategoryUtils {
 
   private deleteCategoryChildren(
     currentSnapshot: firestore.DocumentSnapshot<DocumentData>,
-    transaction: firestore.Transaction
+    transaction: firestore.Transaction,
   ) {
     const { childCategories } = currentSnapshot.data() as CategoryDB;
     for (const childId of childCategories) {
@@ -176,7 +176,7 @@ export class CategoryUtils {
 
   private async deleteCategory(
     deletion: Partial<CategoryDB>,
-    transaction: firestore.Transaction
+    transaction: firestore.Transaction,
   ) {
     const { id, parentCategoryId } = deletion;
     const categoryRef = this.categoryCollectionRef.doc(id);
@@ -188,7 +188,7 @@ export class CategoryUtils {
           parentCategoryId,
           id,
           "delete",
-          transaction
+          transaction,
         );
       }
       transaction.delete(categoryRef);
@@ -206,7 +206,7 @@ export class CategoryUtils {
   async modifyCategories(
     additions: Partial<CategoryDB>[],
     updates: Partial<CategoryDB>[],
-    deletions: Partial<CategoryDB>[]
+    deletions: Partial<CategoryDB>[],
   ): Promise<Category[]> {
     const promises: Promise<void>[] = [];
     try {
