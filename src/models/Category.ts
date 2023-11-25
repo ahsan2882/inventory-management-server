@@ -36,7 +36,7 @@ export class CategoryUtils {
 
   private buildTree(
     categoryDB: CategoryDB,
-    categoryDocuments: CategoryDB[],
+    categoryDocuments: CategoryDB[]
   ): Category {
     const { categoryName, id, childCategories } = categoryDB;
     const node: Category = { label: categoryName, id, children: [] };
@@ -48,7 +48,7 @@ export class CategoryUtils {
         }
         return acc;
       },
-      [],
+      []
     );
 
     node.children = children;
@@ -58,104 +58,165 @@ export class CategoryUtils {
   async generateCategoryTree(): Promise<Category[]> {
     const categoryDocuments = await this.fetchCategories();
     const topLevelCategories = categoryDocuments.filter(
-      (doc) => doc.parentCategoryId === "",
+      (doc) => doc.parentCategoryId === ""
     );
     return topLevelCategories.map((category) =>
-      this.buildTree(category, categoryDocuments),
+      this.buildTree(category, categoryDocuments)
     );
+  }
+
+  private async addNewCategoryToBatch(
+    addition: Partial<CategoryDB>,
+    batch: firestore.WriteBatch
+  ): Promise<void> {
+    const { categoryName, parentCategoryId } = addition;
+    const newCategoryRef = this.categoryCollectionRef.doc();
+    const newCategory: Partial<CategoryDB> = {
+      categoryName,
+      parentCategoryId,
+      childCategories: [],
+    };
+    batch.set(newCategoryRef, newCategory);
+    if (parentCategoryId !== "") {
+      await this.updateChildIdsForParent(
+        parentCategoryId,
+        newCategoryRef.id,
+        "add",
+        batch
+      );
+    }
+  }
+
+  private async updateChildIdsForParent(
+    parentCategoryId: string,
+    categoryId: string,
+    operation: "add" | "delete",
+    transcationBatch: firestore.WriteBatch | firestore.Transaction
+  ): Promise<void> {
+    const parentRef = this.categoryCollectionRef.doc(parentCategoryId);
+    const parentSnapshot = await parentRef.get();
+    if (parentSnapshot.exists) {
+      const { childCategories } = parentSnapshot.data() as CategoryDB;
+      if (
+        operation === "add" &&
+        transcationBatch instanceof firestore.WriteBatch
+      ) {
+        childCategories.push(categoryId);
+        transcationBatch.update(parentRef, { childCategories });
+      }
+      if (
+        operation == "delete" &&
+        transcationBatch instanceof firestore.Transaction
+      ) {
+        const newChildIds = childCategories.reduce((acc, childId) => {
+          if (childId !== categoryId) {
+            acc.push(childId);
+          }
+          return acc;
+        }, []);
+        transcationBatch.update(parentRef, {
+          childCategories: newChildIds,
+        });
+      }
+    }
+  }
+
+  private async addNewCategories(additions: Partial<CategoryDB>[]) {
+    const batch = this.categoryCollection.batch();
+    for (const addition of additions) {
+      await this.addNewCategoryToBatch(addition, batch);
+    }
+    const addPromises: Promise<void> = batch
+      .commit()
+      .then(() => {
+        console.log("added successfully");
+      })
+      .catch((err) => {
+        console.log("Error adding categories:", err);
+      });
+
+    return addPromises;
+  }
+
+  private async updateCategoriesBulk(
+    updates: Partial<CategoryDB>[]
+  ): Promise<void> {
+    const updatePromise = this.categoryCollection.runTransaction(
+      async (transaction) => {
+        for (const update of updates) {
+          await this.updateCategory(update, transaction);
+        }
+      }
+    );
+    return updatePromise;
+  }
+
+  private async updateCategory(
+    update: Partial<CategoryDB>,
+    transaction: firestore.Transaction
+  ): Promise<void> {
+    const { id, categoryName } = update;
+    const categoryRef = this.categoryCollectionRef.doc(id);
+    const categorySnapshot = await categoryRef.get();
+    if (categorySnapshot.exists) {
+      transaction.update(categoryRef, { categoryName });
+    }
+  }
+
+  private deleteCategoryChildren(
+    currentSnapshot: firestore.DocumentSnapshot<DocumentData>,
+    transaction: firestore.Transaction
+  ) {
+    const { childCategories } = currentSnapshot.data() as CategoryDB;
+    for (const childId of childCategories) {
+      const childRef = this.categoryCollectionRef.doc(childId);
+      transaction.delete(childRef);
+    }
+  }
+
+  private async deleteCategory(
+    deletion: Partial<CategoryDB>,
+    transaction: firestore.Transaction
+  ) {
+    const { id, parentCategoryId } = deletion;
+    const categoryRef = this.categoryCollectionRef.doc(id);
+    const currentSnapshot = await categoryRef.get();
+    if (currentSnapshot.exists) {
+      this.deleteCategoryChildren(currentSnapshot, transaction);
+      if (parentCategoryId !== "") {
+        this.updateChildIdsForParent(
+          parentCategoryId,
+          id,
+          "delete",
+          transaction
+        );
+      }
+      transaction.delete(categoryRef);
+    }
+  }
+
+  private async deleteCategoryBulk(deletions: Partial<CategoryDB>[]) {
+    return this.categoryCollection.runTransaction(async (transaction) => {
+      for (const deletion of deletions) {
+        await this.deleteCategory(deletion, transaction);
+      }
+    });
   }
 
   async modifyCategories(
     additions: Partial<CategoryDB>[],
     updates: Partial<CategoryDB>[],
-    deletions: Partial<CategoryDB>[],
+    deletions: Partial<CategoryDB>[]
   ): Promise<Category[]> {
-    const promises = [];
-    if (additions.length > 0) {
-      const batch = this.categoryCollection.batch();
-      for (const addition of additions) {
-        const { categoryName, parentCategoryId } = addition;
-        const newCategoryRef = this.categoryCollectionRef.doc();
-        const newCategory: Partial<CategoryDB> = {
-          categoryName,
-          parentCategoryId,
-          childCategories: [],
-        };
-        batch.set(newCategoryRef, newCategory);
-        if (parentCategoryId !== "") {
-          const parentRef = this.categoryCollectionRef.doc(parentCategoryId);
-          const parentSnapshot = await parentRef.get();
-          if (parentSnapshot.exists) {
-            const { childCategories } = parentSnapshot.data() as CategoryDB;
-            childCategories.push(newCategoryRef.id);
-            batch.update(parentRef, { childCategories });
-          }
-        }
-      }
-      promises.push(
-        batch
-          .commit()
-          .then(() => {
-            console.log("added successfully");
-          })
-          .catch((err) => {
-            console.log("Error adding categories:", err);
-          }),
-      );
-    }
+    const promises: Promise<void>[] = [];
     try {
-      promises.push(
-        this.categoryCollection.runTransaction(async (transaction) => {
-          if (updates.length > 0) {
-            for (const update of updates) {
-              const { id, categoryName } = update;
-              const categoryRef = this.categoryCollectionRef.doc(id);
-              const categorySnapshot = await categoryRef.get();
-              if (categorySnapshot.exists) {
-                transaction.update(categoryRef, { categoryName });
-              }
-            }
-          }
-          if (deletions.length > 0) {
-            for (const deletion of deletions) {
-              const { id, parentCategoryId } = deletion;
-              const categoryRef = this.categoryCollectionRef.doc(id);
-              const currentSnapshot = await categoryRef.get();
-              if (currentSnapshot.exists) {
-                const { childCategories } =
-                  currentSnapshot.data() as CategoryDB;
-                for (const childId of childCategories) {
-                  const childRef = this.categoryCollectionRef.doc(childId);
-                  transaction.delete(childRef);
-                }
-                if (parentCategoryId !== "") {
-                  const parentRef =
-                    this.categoryCollectionRef.doc(parentCategoryId);
-                  const parentSnapshot = await parentRef.get();
-                  const parentData = parentSnapshot.data() as CategoryDB;
-                  const newChildIds = parentData.childCategories.reduce(
-                    (acc, childId) => {
-                      if (childId !== id) {
-                        acc.push(childId);
-                      }
-                      return acc;
-                    },
-                    [],
-                  );
-                  transaction.update(parentRef, {
-                    childCategories: newChildIds,
-                  });
-                }
-                transaction.delete(categoryRef);
-              }
-            }
-          }
-        }),
-      );
+      promises.push(this.addNewCategories(additions));
+      promises.push(this.updateCategoriesBulk(updates));
+      promises.push(this.deleteCategoryBulk(deletions));
+      await Promise.all(promises);
     } catch (error) {
       console.log(error);
     }
-    await Promise.all(promises);
     return await this.generateCategoryTree();
   }
 }
