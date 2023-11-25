@@ -11,15 +11,4 @@ const router = express.Router();
 router.post("/tree", limiter, authenticateToken, getCategoryTree);
 router.post("/modify", limiter, authenticateToken, modifyCategories);
 
-// router.get("/", limiter, authenticateToken, getParentCategories);
-
-// router.get(
-//   "/:parentCategoryID",
-//   limiter,
-//   authenticateToken,
-//   getSubcategoriesByParentID,
-// );
-
-// router.post("/", limiter, authenticateToken, createCategory);
-
 export default router;

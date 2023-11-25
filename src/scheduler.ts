@@ -1,8 +1,7 @@
 import cron from "node-cron";
 import db from "./firebaseConfig";
-import { GeneratedCode } from "./models/ValidationCode";
+import { GeneratedCode, ValidaionUtils } from "./models/ValidationCode";
 import { DocumentData } from "firebase/firestore";
-import { ValidaionUtils } from "./models/ValidationCode";
 
 const validationUtils = new ValidaionUtils();
 
@@ -13,7 +12,7 @@ const removeExpiredUnusedCodes = async () => {
       (doc: DocumentData) => ({
         id: doc.id,
         ...(doc.data() as GeneratedCode),
-      }),
+      })
     );
 
     generatedCodes.forEach(async (code: GeneratedCode) => {
