@@ -34,7 +34,7 @@ export const modifyCategories = async (req: Request, res: Response) => {
     const tree = await categoryUtils.modifyCategories(
       additions,
       updates,
-      deletions
+      deletions,
     );
     return res.status(200).json({ tree });
   } catch (error) {
