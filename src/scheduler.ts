@@ -12,7 +12,7 @@ const removeExpiredUnusedCodes = async () => {
       (doc: DocumentData) => ({
         id: doc.id,
         ...(doc.data() as GeneratedCode),
-      })
+      }),
     );
 
     generatedCodes.forEach(async (code: GeneratedCode) => {
