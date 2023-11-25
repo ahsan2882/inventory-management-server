@@ -1,0 +1,24 @@
+{
+    "additions": [
+        {
+            "categoryName": "new category",
+            "parentCategoryId": "parent1"
+        },
+        {
+            "categoryName": "new category 2",
+            "parentCategoryId": ""
+        }
+    ],
+    "updates": [
+        {
+            "categoryId": "categoryId1",
+            "categoryName": "new name"
+        }
+    ],
+    "deletions": [
+        {
+            "categoryId": "categoryId3",
+            "parentCategoryId": "parent1"
+        }
+    ]
+}

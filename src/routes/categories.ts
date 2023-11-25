@@ -2,22 +2,24 @@ import express from "express";
 import { authenticateToken } from "../middleware/authMiddleware";
 import { limiter } from "../middleware/rateLimiter";
 import {
-  createCategory,
-  getParentCategories,
-  getSubcategoriesByParentID,
+  modifyCategories,
+  getCategoryTree,
 } from "../controllers/categoriesController";
 
 const router = express.Router();
 
-router.get("/", limiter, authenticateToken, getParentCategories);
+router.post("/tree", limiter, authenticateToken, getCategoryTree);
+router.post("/modify", limiter, authenticateToken, modifyCategories);
 
-router.get(
-  "/:parentCategoryID",
-  limiter,
-  authenticateToken,
-  getSubcategoriesByParentID,
-);
+// router.get("/", limiter, authenticateToken, getParentCategories);
 
-router.post("/", limiter, authenticateToken, createCategory);
+// router.get(
+//   "/:parentCategoryID",
+//   limiter,
+//   authenticateToken,
+//   getSubcategoriesByParentID,
+// );
+
+// router.post("/", limiter, authenticateToken, createCategory);
 
 export default router;
