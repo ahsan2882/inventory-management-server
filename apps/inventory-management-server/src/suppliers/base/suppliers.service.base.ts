@@ -20,33 +20,33 @@ export class SuppliersServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
 
   async count(
-    args: Omit<Prisma.SuppliersCountArgs, "select">
+    args: Omit<Prisma.SuppliersCountArgs, "select">,
   ): Promise<number> {
     return this.prisma.suppliers.count(args);
   }
 
   async suppliersItems(
-    args: Prisma.SuppliersFindManyArgs
+    args: Prisma.SuppliersFindManyArgs,
   ): Promise<PrismaSuppliers[]> {
     return this.prisma.suppliers.findMany(args);
   }
   async suppliers(
-    args: Prisma.SuppliersFindUniqueArgs
+    args: Prisma.SuppliersFindUniqueArgs,
   ): Promise<PrismaSuppliers | null> {
     return this.prisma.suppliers.findUnique(args);
   }
   async createSuppliers(
-    args: Prisma.SuppliersCreateArgs
+    args: Prisma.SuppliersCreateArgs,
   ): Promise<PrismaSuppliers> {
     return this.prisma.suppliers.create(args);
   }
   async updateSuppliers(
-    args: Prisma.SuppliersUpdateArgs
+    args: Prisma.SuppliersUpdateArgs,
   ): Promise<PrismaSuppliers> {
     return this.prisma.suppliers.update(args);
   }
   async deleteSuppliers(
-    args: Prisma.SuppliersDeleteArgs
+    args: Prisma.SuppliersDeleteArgs,
   ): Promise<PrismaSuppliers> {
     return this.prisma.suppliers.delete(args);
   }

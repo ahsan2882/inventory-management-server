@@ -24,7 +24,7 @@ export class ServeStaticOptionsService
 
   createLoggerOptions(): ServeStaticModuleOptions[] {
     const serveStaticRootPath = this.configService.get(
-      SERVE_STATIC_ROOT_PATH_VAR
+      SERVE_STATIC_ROOT_PATH_VAR,
     );
     if (serveStaticRootPath) {
       const resolvedPath = path.resolve(serveStaticRootPath);

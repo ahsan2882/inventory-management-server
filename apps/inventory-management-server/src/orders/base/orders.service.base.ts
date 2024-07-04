@@ -27,7 +27,7 @@ export class OrdersServiceBase {
     return this.prisma.orders.findMany(args);
   }
   async orders(
-    args: Prisma.OrdersFindUniqueArgs
+    args: Prisma.OrdersFindUniqueArgs,
   ): Promise<PrismaOrders | null> {
     return this.prisma.orders.findUnique(args);
   }

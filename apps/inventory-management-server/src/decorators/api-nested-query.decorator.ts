@@ -11,7 +11,7 @@ const generateApiQueryObject = (
   prop: any,
   propType: any,
   required: boolean,
-  isArray: boolean
+  isArray: boolean,
 ): ApiQueryOptions => {
   if (propType === Number) {
     return {
@@ -51,7 +51,7 @@ export function ApiNestedQuery(query: Function) {
   const constructor = query.prototype;
   const properties = Reflect.getMetadata(
     "swagger/apiModelPropertiesArray",
-    constructor
+    constructor,
   ).map((prop: any) => prop.slice(1));
 
   const decorators = properties
@@ -59,18 +59,18 @@ export function ApiNestedQuery(query: Function) {
       const { required, isArray } = Reflect.getMetadata(
         "swagger/apiModelProperties",
         constructor,
-        property
+        property,
       );
       const propertyType = Reflect.getMetadata(
         "design:type",
         constructor,
-        property
+        property,
       );
       const typedQuery = generateApiQueryObject(
         property,
         propertyType,
         required,
-        isArray
+        isArray,
       );
       return [ApiExtraModels(propertyType), ApiQuery(typedQuery)];
     })

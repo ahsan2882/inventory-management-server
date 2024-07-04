@@ -15,7 +15,7 @@ describe("Testing the HealthServiceBase", () => {
     it("should return true if allow connection to db", async () => {
       //ARRANGE
       (prismaService.$queryRaw as jest.Mock).mockReturnValue(
-        Promise.resolve(true)
+        Promise.resolve(true),
       );
       //ACT
       const response = await healthServiceBase.isDbReady();
@@ -25,7 +25,7 @@ describe("Testing the HealthServiceBase", () => {
     it("should return false if db is not available", async () => {
       //ARRANGE
       (prismaService.$queryRaw as jest.Mock).mockReturnValue(
-        Promise.reject(false)
+        Promise.reject(false),
       );
       //ACT
       const response = await healthServiceBase.isDbReady();

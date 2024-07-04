@@ -20,7 +20,7 @@ async function main() {
     new ValidationPipe({
       transform: true,
       forbidUnknownValues: false,
-    })
+    }),
   );
 
   const document = SwaggerModule.createDocument(app, swaggerDocumentOptions);

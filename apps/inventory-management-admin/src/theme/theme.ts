@@ -23,7 +23,7 @@ const palette = createPalette(
     success: {
       main: "#31c587",
     },
-  })
+  }),
 );
 
 const themeOptions: ThemeOptions = {

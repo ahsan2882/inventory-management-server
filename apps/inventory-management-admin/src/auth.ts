@@ -17,7 +17,7 @@ export function listen(listener: (authenticated: boolean) => void): void {
 export function setCredentials(credentials: Credentials) {
   localStorage.setItem(
     CREDENTIALS_LOCAL_STORAGE_ITEM,
-    JSON.stringify(credentials)
+    JSON.stringify(credentials),
   );
 }
 

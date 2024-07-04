@@ -28,7 +28,7 @@ export class SuppliersResolverBase {
   constructor(protected readonly service: SuppliersService) {}
 
   async _suppliersItemsMeta(
-    @graphql.Args() args: SuppliersCountArgs
+    @graphql.Args() args: SuppliersCountArgs,
   ): Promise<MetaQueryPayload> {
     const result = await this.service.count(args);
     return {
@@ -38,14 +38,14 @@ export class SuppliersResolverBase {
 
   @graphql.Query(() => [Suppliers])
   async suppliersItems(
-    @graphql.Args() args: SuppliersFindManyArgs
+    @graphql.Args() args: SuppliersFindManyArgs,
   ): Promise<Suppliers[]> {
     return this.service.suppliersItems(args);
   }
 
   @graphql.Query(() => Suppliers, { nullable: true })
   async suppliers(
-    @graphql.Args() args: SuppliersFindUniqueArgs
+    @graphql.Args() args: SuppliersFindUniqueArgs,
   ): Promise<Suppliers | null> {
     const result = await this.service.suppliers(args);
     if (result === null) {
@@ -85,14 +85,14 @@ export class SuppliersResolverBase {
 
   @graphql.Mutation(() => Suppliers)
   async deleteSuppliers(
-    @graphql.Args() args: DeleteSuppliersArgs
+    @graphql.Args() args: DeleteSuppliersArgs,
   ): Promise<Suppliers | null> {
     try {
       return await this.service.deleteSuppliers(args);
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new GraphQLError(
-          `No resource was found for ${JSON.stringify(args.where)}`
+          `No resource was found for ${JSON.stringify(args.where)}`,
         );
       }
       throw error;

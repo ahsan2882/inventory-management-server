@@ -31,7 +31,7 @@ export class CategoriesControllerBase {
   @common.Post()
   @swagger.ApiCreatedResponse({ type: Categories })
   async createCategories(
-    @common.Body() data: CategoriesCreateInput
+    @common.Body() data: CategoriesCreateInput,
   ): Promise<Categories> {
     return await this.service.createCategories({
       data: data,
@@ -68,7 +68,7 @@ export class CategoriesControllerBase {
   @swagger.ApiOkResponse({ type: Categories })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   async categories(
-    @common.Param() params: CategoriesWhereUniqueInput
+    @common.Param() params: CategoriesWhereUniqueInput,
   ): Promise<Categories | null> {
     const result = await this.service.categories({
       where: params,
@@ -83,7 +83,7 @@ export class CategoriesControllerBase {
     });
     if (result === null) {
       throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
+        `No resource was found for ${JSON.stringify(params)}`,
       );
     }
     return result;
@@ -94,7 +94,7 @@ export class CategoriesControllerBase {
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   async updateCategories(
     @common.Param() params: CategoriesWhereUniqueInput,
-    @common.Body() data: CategoriesUpdateInput
+    @common.Body() data: CategoriesUpdateInput,
   ): Promise<Categories | null> {
     try {
       return await this.service.updateCategories({
@@ -112,7 +112,7 @@ export class CategoriesControllerBase {
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new errors.NotFoundException(
-          `No resource was found for ${JSON.stringify(params)}`
+          `No resource was found for ${JSON.stringify(params)}`,
         );
       }
       throw error;
@@ -123,7 +123,7 @@ export class CategoriesControllerBase {
   @swagger.ApiOkResponse({ type: Categories })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   async deleteCategories(
-    @common.Param() params: CategoriesWhereUniqueInput
+    @common.Param() params: CategoriesWhereUniqueInput,
   ): Promise<Categories | null> {
     try {
       return await this.service.deleteCategories({
@@ -140,7 +140,7 @@ export class CategoriesControllerBase {
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new errors.NotFoundException(
-          `No resource was found for ${JSON.stringify(params)}`
+          `No resource was found for ${JSON.stringify(params)}`,
         );
       }
       throw error;

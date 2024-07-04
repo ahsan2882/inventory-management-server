@@ -31,7 +31,7 @@ export class SuppliersControllerBase {
   @common.Post()
   @swagger.ApiCreatedResponse({ type: Suppliers })
   async createSuppliers(
-    @common.Body() data: SuppliersCreateInput
+    @common.Body() data: SuppliersCreateInput,
   ): Promise<Suppliers> {
     return await this.service.createSuppliers({
       data: data,
@@ -68,7 +68,7 @@ export class SuppliersControllerBase {
   @swagger.ApiOkResponse({ type: Suppliers })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   async suppliers(
-    @common.Param() params: SuppliersWhereUniqueInput
+    @common.Param() params: SuppliersWhereUniqueInput,
   ): Promise<Suppliers | null> {
     const result = await this.service.suppliers({
       where: params,
@@ -83,7 +83,7 @@ export class SuppliersControllerBase {
     });
     if (result === null) {
       throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
+        `No resource was found for ${JSON.stringify(params)}`,
       );
     }
     return result;
@@ -94,7 +94,7 @@ export class SuppliersControllerBase {
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   async updateSuppliers(
     @common.Param() params: SuppliersWhereUniqueInput,
-    @common.Body() data: SuppliersUpdateInput
+    @common.Body() data: SuppliersUpdateInput,
   ): Promise<Suppliers | null> {
     try {
       return await this.service.updateSuppliers({
@@ -112,7 +112,7 @@ export class SuppliersControllerBase {
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new errors.NotFoundException(
-          `No resource was found for ${JSON.stringify(params)}`
+          `No resource was found for ${JSON.stringify(params)}`,
         );
       }
       throw error;
@@ -123,7 +123,7 @@ export class SuppliersControllerBase {
   @swagger.ApiOkResponse({ type: Suppliers })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   async deleteSuppliers(
-    @common.Param() params: SuppliersWhereUniqueInput
+    @common.Param() params: SuppliersWhereUniqueInput,
   ): Promise<Suppliers | null> {
     try {
       return await this.service.deleteSuppliers({
@@ -140,7 +140,7 @@ export class SuppliersControllerBase {
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new errors.NotFoundException(
-          `No resource was found for ${JSON.stringify(params)}`
+          `No resource was found for ${JSON.stringify(params)}`,
         );
       }
       throw error;

@@ -31,7 +31,7 @@ export class ProductsControllerBase {
   @common.Post()
   @swagger.ApiCreatedResponse({ type: Products })
   async createProducts(
-    @common.Body() data: ProductsCreateInput
+    @common.Body() data: ProductsCreateInput,
   ): Promise<Products> {
     return await this.service.createProducts({
       data: {
@@ -112,7 +112,7 @@ export class ProductsControllerBase {
   @swagger.ApiOkResponse({ type: Products })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   async products(
-    @common.Param() params: ProductsWhereUniqueInput
+    @common.Param() params: ProductsWhereUniqueInput,
   ): Promise<Products | null> {
     const result = await this.service.products({
       where: params,
@@ -142,7 +142,7 @@ export class ProductsControllerBase {
     });
     if (result === null) {
       throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
+        `No resource was found for ${JSON.stringify(params)}`,
       );
     }
     return result;
@@ -153,7 +153,7 @@ export class ProductsControllerBase {
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   async updateProducts(
     @common.Param() params: ProductsWhereUniqueInput,
-    @common.Body() data: ProductsUpdateInput
+    @common.Body() data: ProductsUpdateInput,
   ): Promise<Products | null> {
     try {
       return await this.service.updateProducts({
@@ -200,7 +200,7 @@ export class ProductsControllerBase {
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new errors.NotFoundException(
-          `No resource was found for ${JSON.stringify(params)}`
+          `No resource was found for ${JSON.stringify(params)}`,
         );
       }
       throw error;
@@ -211,7 +211,7 @@ export class ProductsControllerBase {
   @swagger.ApiOkResponse({ type: Products })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   async deleteProducts(
-    @common.Param() params: ProductsWhereUniqueInput
+    @common.Param() params: ProductsWhereUniqueInput,
   ): Promise<Products | null> {
     try {
       return await this.service.deleteProducts({
@@ -243,7 +243,7 @@ export class ProductsControllerBase {
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new errors.NotFoundException(
-          `No resource was found for ${JSON.stringify(params)}`
+          `No resource was found for ${JSON.stringify(params)}`,
         );
       }
       throw error;

@@ -56,7 +56,7 @@ export class HttpExceptionFilter extends BaseExceptionFilter {
         // Handling Unique Key Constraint Violation Error
         const fields = (exception.meta as { target: string[] }).target;
         message = `Another record with the requested (${fields.join(
-          ", "
+          ", ",
         )}) already exists`;
       } else {
         message =

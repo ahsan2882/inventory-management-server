@@ -12,9 +12,9 @@ describe("isRecordNotFoundError", () => {
         InterpretationError("Error for binding '0': RecordNotFound("Record to update not found.")")`),
           {
             code: PRISMA_QUERY_INTERPRETATION_ERROR,
-          }
-        )
-      )
+          },
+        ),
+      ),
     ).toBe(true);
   });
   test("returns false for any other error", () => {

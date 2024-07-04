@@ -30,12 +30,12 @@ export const httpAuthProvider: AuthProvider = {
         CREDENTIALS_LOCAL_STORAGE_ITEM,
         createBasicAuthorizationHeader(
           credentials.username,
-          credentials.password
-        )
+          credentials.password,
+        ),
       );
       localStorage.setItem(
         USER_DATA_LOCAL_STORAGE_ITEM,
-        JSON.stringify(userData.data)
+        JSON.stringify(userData.data),
       );
       return Promise.resolve();
     }
@@ -72,7 +72,7 @@ export const httpAuthProvider: AuthProvider = {
 
 function createBasicAuthorizationHeader(
   username: string,
-  password: string
+  password: string,
 ): string {
   return `Basic ${btoa(`${username}:${password}`)}`;
 }

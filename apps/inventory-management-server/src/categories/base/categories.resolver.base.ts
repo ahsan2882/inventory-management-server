@@ -28,7 +28,7 @@ export class CategoriesResolverBase {
   constructor(protected readonly service: CategoriesService) {}
 
   async _categoriesItemsMeta(
-    @graphql.Args() args: CategoriesCountArgs
+    @graphql.Args() args: CategoriesCountArgs,
   ): Promise<MetaQueryPayload> {
     const result = await this.service.count(args);
     return {
@@ -38,14 +38,14 @@ export class CategoriesResolverBase {
 
   @graphql.Query(() => [Categories])
   async categoriesItems(
-    @graphql.Args() args: CategoriesFindManyArgs
+    @graphql.Args() args: CategoriesFindManyArgs,
   ): Promise<Categories[]> {
     return this.service.categoriesItems(args);
   }
 
   @graphql.Query(() => Categories, { nullable: true })
   async categories(
-    @graphql.Args() args: CategoriesFindUniqueArgs
+    @graphql.Args() args: CategoriesFindUniqueArgs,
   ): Promise<Categories | null> {
     const result = await this.service.categories(args);
     if (result === null) {
@@ -85,14 +85,14 @@ export class CategoriesResolverBase {
 
   @graphql.Mutation(() => Categories)
   async deleteCategories(
-    @graphql.Args() args: DeleteCategoriesArgs
+    @graphql.Args() args: DeleteCategoriesArgs,
   ): Promise<Categories | null> {
     try {
       return await this.service.deleteCategories(args);
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new GraphQLError(
-          `No resource was found for ${JSON.stringify(args.where)}`
+          `No resource was found for ${JSON.stringify(args.where)}`,
         );
       }
       throw error;

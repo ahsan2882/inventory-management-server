@@ -28,11 +28,11 @@ export const jwtAuthProvider: AuthProvider = {
     if (userData && userData.data?.login.username) {
       localStorage.setItem(
         CREDENTIALS_LOCAL_STORAGE_ITEM,
-        createBearerAuthorizationHeader(userData.data.login?.accessToken)
+        createBearerAuthorizationHeader(userData.data.login?.accessToken),
       );
       localStorage.setItem(
         USER_DATA_LOCAL_STORAGE_ITEM,
-        JSON.stringify(userData.data)
+        JSON.stringify(userData.data),
       );
       return Promise.resolve();
     }

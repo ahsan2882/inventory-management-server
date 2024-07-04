@@ -89,7 +89,7 @@ const aclFilterResponseInterceptor = {
     return next.handle().pipe(
       map((data) => {
         return data;
-      })
+      }),
     );
   },
 };

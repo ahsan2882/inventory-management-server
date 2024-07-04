@@ -85,7 +85,7 @@ export class OrdersControllerBase {
   @swagger.ApiOkResponse({ type: Orders })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   async orders(
-    @common.Param() params: OrdersWhereUniqueInput
+    @common.Param() params: OrdersWhereUniqueInput,
   ): Promise<Orders | null> {
     const result = await this.service.orders({
       where: params,
@@ -107,7 +107,7 @@ export class OrdersControllerBase {
     });
     if (result === null) {
       throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
+        `No resource was found for ${JSON.stringify(params)}`,
       );
     }
     return result;
@@ -118,7 +118,7 @@ export class OrdersControllerBase {
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   async updateOrders(
     @common.Param() params: OrdersWhereUniqueInput,
-    @common.Body() data: OrdersUpdateInput
+    @common.Body() data: OrdersUpdateInput,
   ): Promise<Orders | null> {
     try {
       return await this.service.updateOrders({
@@ -151,7 +151,7 @@ export class OrdersControllerBase {
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new errors.NotFoundException(
-          `No resource was found for ${JSON.stringify(params)}`
+          `No resource was found for ${JSON.stringify(params)}`,
         );
       }
       throw error;
@@ -162,7 +162,7 @@ export class OrdersControllerBase {
   @swagger.ApiOkResponse({ type: Orders })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   async deleteOrders(
-    @common.Param() params: OrdersWhereUniqueInput
+    @common.Param() params: OrdersWhereUniqueInput,
   ): Promise<Orders | null> {
     try {
       return await this.service.deleteOrders({
@@ -186,7 +186,7 @@ export class OrdersControllerBase {
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new errors.NotFoundException(
-          `No resource was found for ${JSON.stringify(params)}`
+          `No resource was found for ${JSON.stringify(params)}`,
         );
       }
       throw error;

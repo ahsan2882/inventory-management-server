@@ -27,7 +27,7 @@ export class OrdersResolverBase {
   constructor(protected readonly service: OrdersService) {}
 
   async _ordersItemsMeta(
-    @graphql.Args() args: OrdersCountArgs
+    @graphql.Args() args: OrdersCountArgs,
   ): Promise<MetaQueryPayload> {
     const result = await this.service.count(args);
     return {
@@ -37,14 +37,14 @@ export class OrdersResolverBase {
 
   @graphql.Query(() => [Orders])
   async ordersItems(
-    @graphql.Args() args: OrdersFindManyArgs
+    @graphql.Args() args: OrdersFindManyArgs,
   ): Promise<Orders[]> {
     return this.service.ordersItems(args);
   }
 
   @graphql.Query(() => Orders, { nullable: true })
   async orders(
-    @graphql.Args() args: OrdersFindUniqueArgs
+    @graphql.Args() args: OrdersFindUniqueArgs,
   ): Promise<Orders | null> {
     const result = await this.service.orders(args);
     if (result === null) {
@@ -98,14 +98,14 @@ export class OrdersResolverBase {
 
   @graphql.Mutation(() => Orders)
   async deleteOrders(
-    @graphql.Args() args: DeleteOrdersArgs
+    @graphql.Args() args: DeleteOrdersArgs,
   ): Promise<Orders | null> {
     try {
       return await this.service.deleteOrders(args);
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new GraphQLError(
-          `No resource was found for ${JSON.stringify(args.where)}`
+          `No resource was found for ${JSON.stringify(args.where)}`,
         );
       }
       throw error;

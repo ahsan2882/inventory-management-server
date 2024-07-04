@@ -71,6 +71,8 @@
     "moduleNameMapper": {
       "@app/custom-validators": "<rootDir>/src/validators"
     },
-    "modulePathIgnorePatterns": ["<rootDir>/dist/"]
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ]
   }
 }

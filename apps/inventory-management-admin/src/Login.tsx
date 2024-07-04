@@ -17,7 +17,7 @@ const Login = ({ theme }: any) => {
   const submit = (e: any) => {
     e.preventDefault();
     login({ username, password }).catch(() =>
-      notify("Invalid username or password")
+      notify("Invalid username or password"),
     );
   };
 

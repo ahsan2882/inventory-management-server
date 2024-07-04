@@ -27,27 +27,27 @@ export class ProductsServiceBase {
   }
 
   async productsItems(
-    args: Prisma.ProductsFindManyArgs
+    args: Prisma.ProductsFindManyArgs,
   ): Promise<PrismaProducts[]> {
     return this.prisma.products.findMany(args);
   }
   async products(
-    args: Prisma.ProductsFindUniqueArgs
+    args: Prisma.ProductsFindUniqueArgs,
   ): Promise<PrismaProducts | null> {
     return this.prisma.products.findUnique(args);
   }
   async createProducts(
-    args: Prisma.ProductsCreateArgs
+    args: Prisma.ProductsCreateArgs,
   ): Promise<PrismaProducts> {
     return this.prisma.products.create(args);
   }
   async updateProducts(
-    args: Prisma.ProductsUpdateArgs
+    args: Prisma.ProductsUpdateArgs,
   ): Promise<PrismaProducts> {
     return this.prisma.products.update(args);
   }
   async deleteProducts(
-    args: Prisma.ProductsDeleteArgs
+    args: Prisma.ProductsDeleteArgs,
   ): Promise<PrismaProducts> {
     return this.prisma.products.delete(args);
   }

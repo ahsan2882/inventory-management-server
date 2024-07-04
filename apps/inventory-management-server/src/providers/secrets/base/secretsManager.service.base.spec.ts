@@ -8,7 +8,7 @@ describe("Testing the secrets manager base class", () => {
   const SECRET_VALUE = "SECRET_VALUE";
   const configService = mock<ConfigService>();
   const secretsManagerServiceBase = new SecretsManagerServiceBase(
-    configService
+    configService,
   );
   beforeEach(() => {
     configService.get.mockClear();
@@ -18,7 +18,7 @@ describe("Testing the secrets manager base class", () => {
     configService.get.mockReturnValue(SECRET_VALUE);
     //ACT
     const result = await secretsManagerServiceBase.getSecret(
-      SECRET_KEY as unknown as EnumSecretsNameKey
+      SECRET_KEY as unknown as EnumSecretsNameKey,
     );
     //ASSERT
     expect(result).toBe(SECRET_VALUE);
@@ -28,14 +28,16 @@ describe("Testing the secrets manager base class", () => {
     configService.get.mockReturnValue(undefined);
     //ACT
     const result = await secretsManagerServiceBase.getSecret(
-      SECRET_KEY as unknown as EnumSecretsNameKey
+      SECRET_KEY as unknown as EnumSecretsNameKey,
     );
     //ASSERT
     expect(result).toBeNull();
   });
   it("should throw an exception if getting null key", () => {
     return expect(
-      secretsManagerServiceBase.getSecret(null as unknown as EnumSecretsNameKey)
+      secretsManagerServiceBase.getSecret(
+        null as unknown as EnumSecretsNameKey,
+      ),
     ).rejects.toThrow();
   });
 });

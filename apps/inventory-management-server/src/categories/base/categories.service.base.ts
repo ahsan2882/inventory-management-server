@@ -20,33 +20,33 @@ export class CategoriesServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
 
   async count(
-    args: Omit<Prisma.CategoriesCountArgs, "select">
+    args: Omit<Prisma.CategoriesCountArgs, "select">,
   ): Promise<number> {
     return this.prisma.categories.count(args);
   }
 
   async categoriesItems(
-    args: Prisma.CategoriesFindManyArgs
+    args: Prisma.CategoriesFindManyArgs,
   ): Promise<PrismaCategories[]> {
     return this.prisma.categories.findMany(args);
   }
   async categories(
-    args: Prisma.CategoriesFindUniqueArgs
+    args: Prisma.CategoriesFindUniqueArgs,
   ): Promise<PrismaCategories | null> {
     return this.prisma.categories.findUnique(args);
   }
   async createCategories(
-    args: Prisma.CategoriesCreateArgs
+    args: Prisma.CategoriesCreateArgs,
   ): Promise<PrismaCategories> {
     return this.prisma.categories.create(args);
   }
   async updateCategories(
-    args: Prisma.CategoriesUpdateArgs
+    args: Prisma.CategoriesUpdateArgs,
   ): Promise<PrismaCategories> {
     return this.prisma.categories.update(args);
   }
   async deleteCategories(
-    args: Prisma.CategoriesDeleteArgs
+    args: Prisma.CategoriesDeleteArgs,
   ): Promise<PrismaCategories> {
     return this.prisma.categories.delete(args);
   }
