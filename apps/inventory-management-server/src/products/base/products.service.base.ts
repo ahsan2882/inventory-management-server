@@ -54,7 +54,7 @@ export class ProductsServiceBase {
 
   async findOrdersItems(
     parentId: string,
-    args: Prisma.OrdersFindManyArgs
+    args: Prisma.OrdersFindManyArgs,
   ): Promise<PrismaOrders[]> {
     return this.prisma.products
       .findUniqueOrThrow({

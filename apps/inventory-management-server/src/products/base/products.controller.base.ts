@@ -254,7 +254,7 @@ export class ProductsControllerBase {
   @ApiNestedQuery(OrdersFindManyArgs)
   async findOrdersItems(
     @common.Req() request: Request,
-    @common.Param() params: ProductsWhereUniqueInput
+    @common.Param() params: ProductsWhereUniqueInput,
   ): Promise<Orders[]> {
     const query = plainToClass(OrdersFindManyArgs, request.query);
     const results = await this.service.findOrdersItems(params.id, {
@@ -277,7 +277,7 @@ export class ProductsControllerBase {
     });
     if (results === null) {
       throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
+        `No resource was found for ${JSON.stringify(params)}`,
       );
     }
     return results;
@@ -286,7 +286,7 @@ export class ProductsControllerBase {
   @common.Post("/:id/ordersItems")
   async connectOrdersItems(
     @common.Param() params: ProductsWhereUniqueInput,
-    @common.Body() body: OrdersWhereUniqueInput[]
+    @common.Body() body: OrdersWhereUniqueInput[],
   ): Promise<void> {
     const data = {
       ordersItems: {
@@ -303,7 +303,7 @@ export class ProductsControllerBase {
   @common.Patch("/:id/ordersItems")
   async updateOrdersItems(
     @common.Param() params: ProductsWhereUniqueInput,
-    @common.Body() body: OrdersWhereUniqueInput[]
+    @common.Body() body: OrdersWhereUniqueInput[],
   ): Promise<void> {
     const data = {
       ordersItems: {
@@ -320,7 +320,7 @@ export class ProductsControllerBase {
   @common.Delete("/:id/ordersItems")
   async disconnectOrdersItems(
     @common.Param() params: ProductsWhereUniqueInput,
-    @common.Body() body: OrdersWhereUniqueInput[]
+    @common.Body() body: OrdersWhereUniqueInput[],
   ): Promise<void> {
     const data = {
       ordersItems: {

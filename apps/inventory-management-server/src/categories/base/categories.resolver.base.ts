@@ -56,7 +56,7 @@ export class CategoriesResolverBase {
 
   @graphql.Mutation(() => Categories)
   async createCategories(
-    @graphql.Args() args: CreateCategoriesArgs
+    @graphql.Args() args: CreateCategoriesArgs,
   ): Promise<Categories> {
     return await this.service.createCategories({
       ...args,
@@ -66,7 +66,7 @@ export class CategoriesResolverBase {
 
   @graphql.Mutation(() => Categories)
   async updateCategories(
-    @graphql.Args() args: UpdateCategoriesArgs
+    @graphql.Args() args: UpdateCategoriesArgs,
   ): Promise<Categories | null> {
     try {
       return await this.service.updateCategories({
@@ -76,7 +76,7 @@ export class CategoriesResolverBase {
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new GraphQLError(
-          `No resource was found for ${JSON.stringify(args.where)}`
+          `No resource was found for ${JSON.stringify(args.where)}`,
         );
       }
       throw error;
@@ -102,7 +102,7 @@ export class CategoriesResolverBase {
   @graphql.ResolveField(() => [Products], { name: "productsItems" })
   async findProductsItems(
     @graphql.Parent() parent: Categories,
-    @graphql.Args() args: ProductsFindManyArgs
+    @graphql.Args() args: ProductsFindManyArgs,
   ): Promise<Products[]> {
     const results = await this.service.findProductsItems(parent.id, args);
 

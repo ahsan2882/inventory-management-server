@@ -53,7 +53,7 @@ export class CategoriesServiceBase {
 
   async findProductsItems(
     parentId: string,
-    args: Prisma.ProductsFindManyArgs
+    args: Prisma.ProductsFindManyArgs,
   ): Promise<PrismaProducts[]> {
     return this.prisma.categories
       .findUniqueOrThrow({

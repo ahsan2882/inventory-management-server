@@ -71,7 +71,7 @@ export class OrdersResolverBase {
 
   @graphql.Mutation(() => Orders)
   async updateOrders(
-    @graphql.Args() args: UpdateOrdersArgs
+    @graphql.Args() args: UpdateOrdersArgs,
   ): Promise<Orders | null> {
     try {
       return await this.service.updateOrders({
@@ -89,7 +89,7 @@ export class OrdersResolverBase {
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new GraphQLError(
-          `No resource was found for ${JSON.stringify(args.where)}`
+          `No resource was found for ${JSON.stringify(args.where)}`,
         );
       }
       throw error;
