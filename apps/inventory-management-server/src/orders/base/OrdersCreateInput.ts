@@ -9,5 +9,70 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class OrdersCreateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import {
+  IsDate,
+  IsOptional,
+  ValidateNested,
+  IsInt,
+  Min,
+  Max,
+  IsNumber,
+} from "class-validator";
+import { Type } from "class-transformer";
+import { ProductsWhereUniqueInput } from "../../products/base/ProductsWhereUniqueInput";
+
+@InputType()
+class OrdersCreateInput {
+  @ApiProperty({
+    required: false,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  @Field(() => Date, {
+    nullable: true,
+  })
+  orderDate?: Date | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => ProductsWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => ProductsWhereUniqueInput)
+  @IsOptional()
+  @Field(() => ProductsWhereUniqueInput, {
+    nullable: true,
+  })
+  product?: ProductsWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+    type: Number,
+  })
+  @IsInt()
+  @Min(-999999999)
+  @Max(999999999)
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  quantity?: number | null;
+
+  @ApiProperty({
+    required: false,
+    type: Number,
+  })
+  @IsNumber()
+  @Min(-999999999)
+  @Max(999999999)
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  totalPrice?: number | null;
+}
+
 export { OrdersCreateInput as OrdersCreateInput };

@@ -9,5 +9,65 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class SuppliersCreateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import {
+  IsString,
+  IsOptional,
+  MaxLength,
+  ValidateNested,
+} from "class-validator";
+import { ProductsCreateNestedManyWithoutSuppliersItemsInput } from "./ProductsCreateNestedManyWithoutSuppliersItemsInput";
+import { Type } from "class-transformer";
+
+@InputType()
+class SuppliersCreateInput {
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  contactEmail?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  contactPhone?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  name?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => ProductsCreateNestedManyWithoutSuppliersItemsInput,
+  })
+  @ValidateNested()
+  @Type(() => ProductsCreateNestedManyWithoutSuppliersItemsInput)
+  @IsOptional()
+  @Field(() => ProductsCreateNestedManyWithoutSuppliersItemsInput, {
+    nullable: true,
+  })
+  productsItems?: ProductsCreateNestedManyWithoutSuppliersItemsInput;
+}
+
 export { SuppliersCreateInput as SuppliersCreateInput };

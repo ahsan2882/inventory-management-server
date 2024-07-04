@@ -17,7 +17,13 @@ import { Products } from "./Products";
 import { ProductsCountArgs } from "./ProductsCountArgs";
 import { ProductsFindManyArgs } from "./ProductsFindManyArgs";
 import { ProductsFindUniqueArgs } from "./ProductsFindUniqueArgs";
+import { CreateProductsArgs } from "./CreateProductsArgs";
+import { UpdateProductsArgs } from "./UpdateProductsArgs";
 import { DeleteProductsArgs } from "./DeleteProductsArgs";
+import { OrdersFindManyArgs } from "../../orders/base/OrdersFindManyArgs";
+import { Orders } from "../../orders/base/Orders";
+import { Categories } from "../../categories/base/Categories";
+import { Suppliers } from "../../suppliers/base/Suppliers";
 import { ProductsService } from "../products.service";
 @graphql.Resolver(() => Products)
 export class ProductsResolverBase {
@@ -51,6 +57,63 @@ export class ProductsResolverBase {
   }
 
   @graphql.Mutation(() => Products)
+  async createProducts(
+    @graphql.Args() args: CreateProductsArgs
+  ): Promise<Products> {
+    return await this.service.createProducts({
+      ...args,
+      data: {
+        ...args.data,
+
+        category: args.data.category
+          ? {
+              connect: args.data.category,
+            }
+          : undefined,
+
+        supplier: args.data.supplier
+          ? {
+              connect: args.data.supplier,
+            }
+          : undefined,
+      },
+    });
+  }
+
+  @graphql.Mutation(() => Products)
+  async updateProducts(
+    @graphql.Args() args: UpdateProductsArgs
+  ): Promise<Products | null> {
+    try {
+      return await this.service.updateProducts({
+        ...args,
+        data: {
+          ...args.data,
+
+          category: args.data.category
+            ? {
+                connect: args.data.category,
+              }
+            : undefined,
+
+          supplier: args.data.supplier
+            ? {
+                connect: args.data.supplier,
+              }
+            : undefined,
+        },
+      });
+    } catch (error) {
+      if (isRecordNotFoundError(error)) {
+        throw new GraphQLError(
+          `No resource was found for ${JSON.stringify(args.where)}`
+        );
+      }
+      throw error;
+    }
+  }
+
+  @graphql.Mutation(() => Products)
   async deleteProducts(
     @graphql.Args() args: DeleteProductsArgs
   ): Promise<Products | null> {
@@ -64,5 +127,49 @@ export class ProductsResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => [Orders], { name: "ordersItems" })
+  async findOrdersItems(
+    @graphql.Parent() parent: Products,
+    @graphql.Args() args: OrdersFindManyArgs
+  ): Promise<Orders[]> {
+    const results = await this.service.findOrdersItems(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @graphql.ResolveField(() => Categories, {
+    nullable: true,
+    name: "category",
+  })
+  async getCategory(
+    @graphql.Parent() parent: Products
+  ): Promise<Categories | null> {
+    const result = await this.service.getCategory(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
+  }
+
+  @graphql.ResolveField(() => Suppliers, {
+    nullable: true,
+    name: "supplier",
+  })
+  async getSupplier(
+    @graphql.Parent() parent: Products
+  ): Promise<Suppliers | null> {
+    const result = await this.service.getSupplier(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
   }
 }

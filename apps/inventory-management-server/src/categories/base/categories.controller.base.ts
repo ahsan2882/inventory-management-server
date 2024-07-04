@@ -22,6 +22,9 @@ import { Categories } from "./Categories";
 import { CategoriesFindManyArgs } from "./CategoriesFindManyArgs";
 import { CategoriesWhereUniqueInput } from "./CategoriesWhereUniqueInput";
 import { CategoriesUpdateInput } from "./CategoriesUpdateInput";
+import { ProductsFindManyArgs } from "../../products/base/ProductsFindManyArgs";
+import { Products } from "../../products/base/Products";
+import { ProductsWhereUniqueInput } from "../../products/base/ProductsWhereUniqueInput";
 
 export class CategoriesControllerBase {
   constructor(protected readonly service: CategoriesService) {}
@@ -34,7 +37,10 @@ export class CategoriesControllerBase {
       data: data,
       select: {
         createdAt: true,
+        description: true,
         id: true,
+        name: true,
+        parentCategory: true,
         updatedAt: true,
       },
     });
@@ -49,7 +55,10 @@ export class CategoriesControllerBase {
       ...args,
       select: {
         createdAt: true,
+        description: true,
         id: true,
+        name: true,
+        parentCategory: true,
         updatedAt: true,
       },
     });
@@ -65,7 +74,10 @@ export class CategoriesControllerBase {
       where: params,
       select: {
         createdAt: true,
+        description: true,
         id: true,
+        name: true,
+        parentCategory: true,
         updatedAt: true,
       },
     });
@@ -90,7 +102,10 @@ export class CategoriesControllerBase {
         data: data,
         select: {
           createdAt: true,
+          description: true,
           id: true,
+          name: true,
+          parentCategory: true,
           updatedAt: true,
         },
       });
@@ -115,7 +130,10 @@ export class CategoriesControllerBase {
         where: params,
         select: {
           createdAt: true,
+          description: true,
           id: true,
+          name: true,
+          parentCategory: true,
           updatedAt: true,
         },
       });
@@ -127,5 +145,97 @@ export class CategoriesControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.Get("/:id/productsItems")
+  @ApiNestedQuery(ProductsFindManyArgs)
+  async findProductsItems(
+    @common.Req() request: Request,
+    @common.Param() params: CategoriesWhereUniqueInput
+  ): Promise<Products[]> {
+    const query = plainToClass(ProductsFindManyArgs, request.query);
+    const results = await this.service.findProductsItems(params.id, {
+      ...query,
+      select: {
+        category: {
+          select: {
+            id: true,
+          },
+        },
+
+        createdAt: true,
+        description: true,
+        id: true,
+        image: true,
+        name: true,
+        price: true,
+        quantity: true,
+
+        supplier: {
+          select: {
+            id: true,
+          },
+        },
+
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/productsItems")
+  async connectProductsItems(
+    @common.Param() params: CategoriesWhereUniqueInput,
+    @common.Body() body: ProductsWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      productsItems: {
+        connect: body,
+      },
+    };
+    await this.service.updateCategories({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/productsItems")
+  async updateProductsItems(
+    @common.Param() params: CategoriesWhereUniqueInput,
+    @common.Body() body: ProductsWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      productsItems: {
+        set: body,
+      },
+    };
+    await this.service.updateCategories({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/productsItems")
+  async disconnectProductsItems(
+    @common.Param() params: CategoriesWhereUniqueInput,
+    @common.Body() body: ProductsWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      productsItems: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateCategories({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }

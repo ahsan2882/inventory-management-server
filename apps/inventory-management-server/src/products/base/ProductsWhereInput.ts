@@ -11,12 +11,41 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringFilter } from "../../util/StringFilter";
+import { CategoriesWhereUniqueInput } from "../../categories/base/CategoriesWhereUniqueInput";
+import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { IsOptional } from "class-validator";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { StringFilter } from "../../util/StringFilter";
+import { OrdersListRelationFilter } from "../../orders/base/OrdersListRelationFilter";
+import { FloatNullableFilter } from "../../util/FloatNullableFilter";
+import { IntNullableFilter } from "../../util/IntNullableFilter";
+import { SuppliersWhereUniqueInput } from "../../suppliers/base/SuppliersWhereUniqueInput";
 
 @InputType()
 class ProductsWhereInput {
+  @ApiProperty({
+    required: false,
+    type: () => CategoriesWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => CategoriesWhereUniqueInput)
+  @IsOptional()
+  @Field(() => CategoriesWhereUniqueInput, {
+    nullable: true,
+  })
+  category?: CategoriesWhereUniqueInput;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  description?: StringNullableFilter;
+
   @ApiProperty({
     required: false,
     type: StringFilter,
@@ -27,6 +56,74 @@ class ProductsWhereInput {
     nullable: true,
   })
   id?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  image?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  name?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrdersListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => OrdersListRelationFilter)
+  @IsOptional()
+  @Field(() => OrdersListRelationFilter, {
+    nullable: true,
+  })
+  ordersItems?: OrdersListRelationFilter;
+
+  @ApiProperty({
+    required: false,
+    type: FloatNullableFilter,
+  })
+  @Type(() => FloatNullableFilter)
+  @IsOptional()
+  @Field(() => FloatNullableFilter, {
+    nullable: true,
+  })
+  price?: FloatNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: IntNullableFilter,
+  })
+  @Type(() => IntNullableFilter)
+  @IsOptional()
+  @Field(() => IntNullableFilter, {
+    nullable: true,
+  })
+  quantity?: IntNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => SuppliersWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => SuppliersWhereUniqueInput)
+  @IsOptional()
+  @Field(() => SuppliersWhereUniqueInput, {
+    nullable: true,
+  })
+  supplier?: SuppliersWhereUniqueInput;
 }
 
 export { ProductsWhereInput as ProductsWhereInput };

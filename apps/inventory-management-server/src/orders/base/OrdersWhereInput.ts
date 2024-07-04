@@ -13,7 +13,11 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { StringFilter } from "../../util/StringFilter";
 import { Type } from "class-transformer";
-import { IsOptional } from "class-validator";
+import { IsOptional, ValidateNested } from "class-validator";
+import { DateTimeNullableFilter } from "../../util/DateTimeNullableFilter";
+import { ProductsWhereUniqueInput } from "../../products/base/ProductsWhereUniqueInput";
+import { IntNullableFilter } from "../../util/IntNullableFilter";
+import { FloatNullableFilter } from "../../util/FloatNullableFilter";
 
 @InputType()
 class OrdersWhereInput {
@@ -27,6 +31,51 @@ class OrdersWhereInput {
     nullable: true,
   })
   id?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: DateTimeNullableFilter,
+  })
+  @Type(() => DateTimeNullableFilter)
+  @IsOptional()
+  @Field(() => DateTimeNullableFilter, {
+    nullable: true,
+  })
+  orderDate?: DateTimeNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => ProductsWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => ProductsWhereUniqueInput)
+  @IsOptional()
+  @Field(() => ProductsWhereUniqueInput, {
+    nullable: true,
+  })
+  product?: ProductsWhereUniqueInput;
+
+  @ApiProperty({
+    required: false,
+    type: IntNullableFilter,
+  })
+  @Type(() => IntNullableFilter)
+  @IsOptional()
+  @Field(() => IntNullableFilter, {
+    nullable: true,
+  })
+  quantity?: IntNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: FloatNullableFilter,
+  })
+  @Type(() => FloatNullableFilter)
+  @IsOptional()
+  @Field(() => FloatNullableFilter, {
+    nullable: true,
+  })
+  totalPrice?: FloatNullableFilter;
 }
 
 export { OrdersWhereInput as OrdersWhereInput };

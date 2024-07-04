@@ -9,5 +9,122 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class ProductsUpdateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import { CategoriesWhereUniqueInput } from "../../categories/base/CategoriesWhereUniqueInput";
+import {
+  ValidateNested,
+  IsOptional,
+  IsString,
+  MaxLength,
+  IsNumber,
+  Min,
+  Max,
+  IsInt,
+} from "class-validator";
+import { Type } from "class-transformer";
+import { OrdersUpdateManyWithoutProductsItemsInput } from "./OrdersUpdateManyWithoutProductsItemsInput";
+import { SuppliersWhereUniqueInput } from "../../suppliers/base/SuppliersWhereUniqueInput";
+
+@InputType()
+class ProductsUpdateInput {
+  @ApiProperty({
+    required: false,
+    type: () => CategoriesWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => CategoriesWhereUniqueInput)
+  @IsOptional()
+  @Field(() => CategoriesWhereUniqueInput, {
+    nullable: true,
+  })
+  category?: CategoriesWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  description?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  image?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  name?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrdersUpdateManyWithoutProductsItemsInput,
+  })
+  @ValidateNested()
+  @Type(() => OrdersUpdateManyWithoutProductsItemsInput)
+  @IsOptional()
+  @Field(() => OrdersUpdateManyWithoutProductsItemsInput, {
+    nullable: true,
+  })
+  ordersItems?: OrdersUpdateManyWithoutProductsItemsInput;
+
+  @ApiProperty({
+    required: false,
+    type: Number,
+  })
+  @IsNumber()
+  @Min(-999999999)
+  @Max(999999999)
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  price?: number | null;
+
+  @ApiProperty({
+    required: false,
+    type: Number,
+  })
+  @IsInt()
+  @Min(-999999999)
+  @Max(999999999)
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  quantity?: number | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => SuppliersWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => SuppliersWhereUniqueInput)
+  @IsOptional()
+  @Field(() => SuppliersWhereUniqueInput, {
+    nullable: true,
+  })
+  supplier?: SuppliersWhereUniqueInput | null;
+}
+
 export { ProductsUpdateInput as ProductsUpdateInput };

@@ -17,7 +17,11 @@ import { Categories } from "./Categories";
 import { CategoriesCountArgs } from "./CategoriesCountArgs";
 import { CategoriesFindManyArgs } from "./CategoriesFindManyArgs";
 import { CategoriesFindUniqueArgs } from "./CategoriesFindUniqueArgs";
+import { CreateCategoriesArgs } from "./CreateCategoriesArgs";
+import { UpdateCategoriesArgs } from "./UpdateCategoriesArgs";
 import { DeleteCategoriesArgs } from "./DeleteCategoriesArgs";
+import { ProductsFindManyArgs } from "../../products/base/ProductsFindManyArgs";
+import { Products } from "../../products/base/Products";
 import { CategoriesService } from "../categories.service";
 @graphql.Resolver(() => Categories)
 export class CategoriesResolverBase {
@@ -51,6 +55,35 @@ export class CategoriesResolverBase {
   }
 
   @graphql.Mutation(() => Categories)
+  async createCategories(
+    @graphql.Args() args: CreateCategoriesArgs
+  ): Promise<Categories> {
+    return await this.service.createCategories({
+      ...args,
+      data: args.data,
+    });
+  }
+
+  @graphql.Mutation(() => Categories)
+  async updateCategories(
+    @graphql.Args() args: UpdateCategoriesArgs
+  ): Promise<Categories | null> {
+    try {
+      return await this.service.updateCategories({
+        ...args,
+        data: args.data,
+      });
+    } catch (error) {
+      if (isRecordNotFoundError(error)) {
+        throw new GraphQLError(
+          `No resource was found for ${JSON.stringify(args.where)}`
+        );
+      }
+      throw error;
+    }
+  }
+
+  @graphql.Mutation(() => Categories)
   async deleteCategories(
     @graphql.Args() args: DeleteCategoriesArgs
   ): Promise<Categories | null> {
@@ -64,5 +97,19 @@ export class CategoriesResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => [Products], { name: "productsItems" })
+  async findProductsItems(
+    @graphql.Parent() parent: Categories,
+    @graphql.Args() args: ProductsFindManyArgs
+  ): Promise<Products[]> {
+    const results = await this.service.findProductsItems(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
   }
 }

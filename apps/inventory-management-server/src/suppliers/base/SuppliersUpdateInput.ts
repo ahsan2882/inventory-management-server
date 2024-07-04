@@ -9,5 +9,65 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class SuppliersUpdateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import {
+  IsString,
+  IsOptional,
+  MaxLength,
+  ValidateNested,
+} from "class-validator";
+import { ProductsUpdateManyWithoutSuppliersItemsInput } from "./ProductsUpdateManyWithoutSuppliersItemsInput";
+import { Type } from "class-transformer";
+
+@InputType()
+class SuppliersUpdateInput {
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  contactEmail?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  contactPhone?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  name?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => ProductsUpdateManyWithoutSuppliersItemsInput,
+  })
+  @ValidateNested()
+  @Type(() => ProductsUpdateManyWithoutSuppliersItemsInput)
+  @IsOptional()
+  @Field(() => ProductsUpdateManyWithoutSuppliersItemsInput, {
+    nullable: true,
+  })
+  productsItems?: ProductsUpdateManyWithoutSuppliersItemsInput;
+}
+
 export { SuppliersUpdateInput as SuppliersUpdateInput };

@@ -9,5 +9,66 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class CategoriesUpdateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import {
+  IsString,
+  MaxLength,
+  IsOptional,
+  ValidateNested,
+} from "class-validator";
+import { ProductsUpdateManyWithoutCategoriesItemsInput } from "./ProductsUpdateManyWithoutCategoriesItemsInput";
+import { Type } from "class-transformer";
+
+@InputType()
+class CategoriesUpdateInput {
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  description?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  name?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  parentCategory?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => ProductsUpdateManyWithoutCategoriesItemsInput,
+  })
+  @ValidateNested()
+  @Type(() => ProductsUpdateManyWithoutCategoriesItemsInput)
+  @IsOptional()
+  @Field(() => ProductsUpdateManyWithoutCategoriesItemsInput, {
+    nullable: true,
+  })
+  productsItems?: ProductsUpdateManyWithoutCategoriesItemsInput;
+}
+
 export { CategoriesUpdateInput as CategoriesUpdateInput };

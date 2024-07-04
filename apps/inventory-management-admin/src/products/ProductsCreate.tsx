@@ -1,11 +1,52 @@
 import * as React from "react";
-import { Create, SimpleForm, CreateProps } from "react-admin";
+
+import {
+  Create,
+  SimpleForm,
+  CreateProps,
+  ReferenceInput,
+  SelectInput,
+  TextInput,
+  ReferenceArrayInput,
+  SelectArrayInput,
+  NumberInput,
+} from "react-admin";
+
+import { CategoriesTitle } from "../categories/CategoriesTitle";
+import { OrdersTitle } from "../orders/OrdersTitle";
+import { SuppliersTitle } from "../suppliers/SuppliersTitle";
 
 export const ProductsCreate = (props: CreateProps): React.ReactElement => {
   return (
     <Create {...props}>
       <SimpleForm>
-        <div />
+        <ReferenceInput
+          source="category.id"
+          reference="Categories"
+          label="Category"
+        >
+          <SelectInput optionText={CategoriesTitle} />
+        </ReferenceInput>
+        <TextInput label="Description" multiline source="description" />
+        <TextInput label="Image" source="image" />
+        <TextInput label="Name" source="name" />
+        <ReferenceArrayInput
+          source="ordersItems"
+          reference="Orders"
+          parse={(value: any) => value && value.map((v: any) => ({ id: v }))}
+          format={(value: any) => value && value.map((v: any) => v.id)}
+        >
+          <SelectArrayInput optionText={OrdersTitle} />
+        </ReferenceArrayInput>
+        <NumberInput label="Price" source="price" />
+        <NumberInput step={1} label="Quantity" source="quantity" />
+        <ReferenceInput
+          source="supplier.id"
+          reference="Suppliers"
+          label="Supplier"
+        >
+          <SelectInput optionText={SuppliersTitle} />
+        </ReferenceInput>
       </SimpleForm>
     </Create>
   );

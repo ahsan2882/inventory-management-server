@@ -18,25 +18,37 @@ import { SuppliersService } from "../suppliers.service";
 const nonExistingId = "nonExistingId";
 const existingId = "existingId";
 const CREATE_INPUT = {
+  contactEmail: "exampleContactEmail",
+  contactPhone: "exampleContactPhone",
   createdAt: new Date(),
   id: "exampleId",
+  name: "exampleName",
   updatedAt: new Date(),
 };
 const CREATE_RESULT = {
+  contactEmail: "exampleContactEmail",
+  contactPhone: "exampleContactPhone",
   createdAt: new Date(),
   id: "exampleId",
+  name: "exampleName",
   updatedAt: new Date(),
 };
 const FIND_MANY_RESULT = [
   {
+    contactEmail: "exampleContactEmail",
+    contactPhone: "exampleContactPhone",
     createdAt: new Date(),
     id: "exampleId",
+    name: "exampleName",
     updatedAt: new Date(),
   },
 ];
 const FIND_ONE_RESULT = {
+  contactEmail: "exampleContactEmail",
+  contactPhone: "exampleContactPhone",
   createdAt: new Date(),
   id: "exampleId",
+  name: "exampleName",
   updatedAt: new Date(),
 };
 

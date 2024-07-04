@@ -17,7 +17,11 @@ import { Suppliers } from "./Suppliers";
 import { SuppliersCountArgs } from "./SuppliersCountArgs";
 import { SuppliersFindManyArgs } from "./SuppliersFindManyArgs";
 import { SuppliersFindUniqueArgs } from "./SuppliersFindUniqueArgs";
+import { CreateSuppliersArgs } from "./CreateSuppliersArgs";
+import { UpdateSuppliersArgs } from "./UpdateSuppliersArgs";
 import { DeleteSuppliersArgs } from "./DeleteSuppliersArgs";
+import { ProductsFindManyArgs } from "../../products/base/ProductsFindManyArgs";
+import { Products } from "../../products/base/Products";
 import { SuppliersService } from "../suppliers.service";
 @graphql.Resolver(() => Suppliers)
 export class SuppliersResolverBase {
@@ -51,6 +55,35 @@ export class SuppliersResolverBase {
   }
 
   @graphql.Mutation(() => Suppliers)
+  async createSuppliers(
+    @graphql.Args() args: CreateSuppliersArgs
+  ): Promise<Suppliers> {
+    return await this.service.createSuppliers({
+      ...args,
+      data: args.data,
+    });
+  }
+
+  @graphql.Mutation(() => Suppliers)
+  async updateSuppliers(
+    @graphql.Args() args: UpdateSuppliersArgs
+  ): Promise<Suppliers | null> {
+    try {
+      return await this.service.updateSuppliers({
+        ...args,
+        data: args.data,
+      });
+    } catch (error) {
+      if (isRecordNotFoundError(error)) {
+        throw new GraphQLError(
+          `No resource was found for ${JSON.stringify(args.where)}`
+        );
+      }
+      throw error;
+    }
+  }
+
+  @graphql.Mutation(() => Suppliers)
   async deleteSuppliers(
     @graphql.Args() args: DeleteSuppliersArgs
   ): Promise<Suppliers | null> {
@@ -64,5 +97,19 @@ export class SuppliersResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => [Products], { name: "productsItems" })
+  async findProductsItems(
+    @graphql.Parent() parent: Suppliers,
+    @graphql.Args() args: ProductsFindManyArgs
+  ): Promise<Products[]> {
+    const results = await this.service.findProductsItems(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
   }
 }

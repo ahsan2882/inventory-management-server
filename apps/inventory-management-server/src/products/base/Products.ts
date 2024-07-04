@@ -11,11 +11,35 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsString } from "class-validator";
+import { Categories } from "../../categories/base/Categories";
+
+import {
+  ValidateNested,
+  IsOptional,
+  IsDate,
+  IsString,
+  MaxLength,
+  IsNumber,
+  Min,
+  Max,
+  IsInt,
+} from "class-validator";
+
 import { Type } from "class-transformer";
+import { Orders } from "../../orders/base/Orders";
+import { Suppliers } from "../../suppliers/base/Suppliers";
 
 @ObjectType()
 class Products {
+  @ApiProperty({
+    required: false,
+    type: () => Categories,
+  })
+  @ValidateNested()
+  @Type(() => Categories)
+  @IsOptional()
+  category?: Categories | null;
+
   @ApiProperty({
     required: true,
   })
@@ -25,12 +49,92 @@ class Products {
   createdAt!: Date;
 
   @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  description!: string | null;
+
+  @ApiProperty({
     required: true,
     type: String,
   })
   @IsString()
   @Field(() => String)
   id!: string;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  image!: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  name!: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => [Orders],
+  })
+  @ValidateNested()
+  @Type(() => Orders)
+  @IsOptional()
+  ordersItems?: Array<Orders>;
+
+  @ApiProperty({
+    required: false,
+    type: Number,
+  })
+  @IsNumber()
+  @Min(-999999999)
+  @Max(999999999)
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  price!: number | null;
+
+  @ApiProperty({
+    required: false,
+    type: Number,
+  })
+  @IsInt()
+  @Min(-999999999)
+  @Max(999999999)
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  quantity!: number | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => Suppliers,
+  })
+  @ValidateNested()
+  @Type(() => Suppliers)
+  @IsOptional()
+  supplier?: Suppliers | null;
 
   @ApiProperty({
     required: true,

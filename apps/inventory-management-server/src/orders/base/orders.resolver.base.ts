@@ -17,7 +17,10 @@ import { Orders } from "./Orders";
 import { OrdersCountArgs } from "./OrdersCountArgs";
 import { OrdersFindManyArgs } from "./OrdersFindManyArgs";
 import { OrdersFindUniqueArgs } from "./OrdersFindUniqueArgs";
+import { CreateOrdersArgs } from "./CreateOrdersArgs";
+import { UpdateOrdersArgs } from "./UpdateOrdersArgs";
 import { DeleteOrdersArgs } from "./DeleteOrdersArgs";
+import { Products } from "../../products/base/Products";
 import { OrdersService } from "../orders.service";
 @graphql.Resolver(() => Orders)
 export class OrdersResolverBase {
@@ -51,6 +54,49 @@ export class OrdersResolverBase {
   }
 
   @graphql.Mutation(() => Orders)
+  async createOrders(@graphql.Args() args: CreateOrdersArgs): Promise<Orders> {
+    return await this.service.createOrders({
+      ...args,
+      data: {
+        ...args.data,
+
+        product: args.data.product
+          ? {
+              connect: args.data.product,
+            }
+          : undefined,
+      },
+    });
+  }
+
+  @graphql.Mutation(() => Orders)
+  async updateOrders(
+    @graphql.Args() args: UpdateOrdersArgs
+  ): Promise<Orders | null> {
+    try {
+      return await this.service.updateOrders({
+        ...args,
+        data: {
+          ...args.data,
+
+          product: args.data.product
+            ? {
+                connect: args.data.product,
+              }
+            : undefined,
+        },
+      });
+    } catch (error) {
+      if (isRecordNotFoundError(error)) {
+        throw new GraphQLError(
+          `No resource was found for ${JSON.stringify(args.where)}`
+        );
+      }
+      throw error;
+    }
+  }
+
+  @graphql.Mutation(() => Orders)
   async deleteOrders(
     @graphql.Args() args: DeleteOrdersArgs
   ): Promise<Orders | null> {
@@ -64,5 +110,18 @@ export class OrdersResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => Products, {
+    nullable: true,
+    name: "product",
+  })
+  async getProduct(@graphql.Parent() parent: Orders): Promise<Products | null> {
+    const result = await this.service.getProduct(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
   }
 }

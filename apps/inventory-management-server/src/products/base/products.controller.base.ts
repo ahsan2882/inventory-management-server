@@ -22,6 +22,9 @@ import { Products } from "./Products";
 import { ProductsFindManyArgs } from "./ProductsFindManyArgs";
 import { ProductsWhereUniqueInput } from "./ProductsWhereUniqueInput";
 import { ProductsUpdateInput } from "./ProductsUpdateInput";
+import { OrdersFindManyArgs } from "../../orders/base/OrdersFindManyArgs";
+import { Orders } from "../../orders/base/Orders";
+import { OrdersWhereUniqueInput } from "../../orders/base/OrdersWhereUniqueInput";
 
 export class ProductsControllerBase {
   constructor(protected readonly service: ProductsService) {}
@@ -31,10 +34,42 @@ export class ProductsControllerBase {
     @common.Body() data: ProductsCreateInput
   ): Promise<Products> {
     return await this.service.createProducts({
-      data: data,
+      data: {
+        ...data,
+
+        category: data.category
+          ? {
+              connect: data.category,
+            }
+          : undefined,
+
+        supplier: data.supplier
+          ? {
+              connect: data.supplier,
+            }
+          : undefined,
+      },
       select: {
+        category: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
+        description: true,
         id: true,
+        image: true,
+        name: true,
+        price: true,
+        quantity: true,
+
+        supplier: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -48,8 +83,26 @@ export class ProductsControllerBase {
     return this.service.productsItems({
       ...args,
       select: {
+        category: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
+        description: true,
         id: true,
+        image: true,
+        name: true,
+        price: true,
+        quantity: true,
+
+        supplier: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -64,8 +117,26 @@ export class ProductsControllerBase {
     const result = await this.service.products({
       where: params,
       select: {
+        category: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
+        description: true,
         id: true,
+        image: true,
+        name: true,
+        price: true,
+        quantity: true,
+
+        supplier: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -87,10 +158,42 @@ export class ProductsControllerBase {
     try {
       return await this.service.updateProducts({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          category: data.category
+            ? {
+                connect: data.category,
+              }
+            : undefined,
+
+          supplier: data.supplier
+            ? {
+                connect: data.supplier,
+              }
+            : undefined,
+        },
         select: {
+          category: {
+            select: {
+              id: true,
+            },
+          },
+
           createdAt: true,
+          description: true,
           id: true,
+          image: true,
+          name: true,
+          price: true,
+          quantity: true,
+
+          supplier: {
+            select: {
+              id: true,
+            },
+          },
+
           updatedAt: true,
         },
       });
@@ -114,8 +217,26 @@ export class ProductsControllerBase {
       return await this.service.deleteProducts({
         where: params,
         select: {
+          category: {
+            select: {
+              id: true,
+            },
+          },
+
           createdAt: true,
+          description: true,
           id: true,
+          image: true,
+          name: true,
+          price: true,
+          quantity: true,
+
+          supplier: {
+            select: {
+              id: true,
+            },
+          },
+
           updatedAt: true,
         },
       });
@@ -127,5 +248,89 @@ export class ProductsControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.Get("/:id/ordersItems")
+  @ApiNestedQuery(OrdersFindManyArgs)
+  async findOrdersItems(
+    @common.Req() request: Request,
+    @common.Param() params: ProductsWhereUniqueInput
+  ): Promise<Orders[]> {
+    const query = plainToClass(OrdersFindManyArgs, request.query);
+    const results = await this.service.findOrdersItems(params.id, {
+      ...query,
+      select: {
+        createdAt: true,
+        id: true,
+        orderDate: true,
+
+        product: {
+          select: {
+            id: true,
+          },
+        },
+
+        quantity: true,
+        totalPrice: true,
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/ordersItems")
+  async connectOrdersItems(
+    @common.Param() params: ProductsWhereUniqueInput,
+    @common.Body() body: OrdersWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      ordersItems: {
+        connect: body,
+      },
+    };
+    await this.service.updateProducts({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/ordersItems")
+  async updateOrdersItems(
+    @common.Param() params: ProductsWhereUniqueInput,
+    @common.Body() body: OrdersWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      ordersItems: {
+        set: body,
+      },
+    };
+    await this.service.updateProducts({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/ordersItems")
+  async disconnectOrdersItems(
+    @common.Param() params: ProductsWhereUniqueInput,
+    @common.Body() body: OrdersWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      ordersItems: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateProducts({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }

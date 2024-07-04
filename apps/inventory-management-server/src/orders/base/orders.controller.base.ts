@@ -29,10 +29,28 @@ export class OrdersControllerBase {
   @swagger.ApiCreatedResponse({ type: Orders })
   async createOrders(@common.Body() data: OrdersCreateInput): Promise<Orders> {
     return await this.service.createOrders({
-      data: data,
+      data: {
+        ...data,
+
+        product: data.product
+          ? {
+              connect: data.product,
+            }
+          : undefined,
+      },
       select: {
         createdAt: true,
         id: true,
+        orderDate: true,
+
+        product: {
+          select: {
+            id: true,
+          },
+        },
+
+        quantity: true,
+        totalPrice: true,
         updatedAt: true,
       },
     });
@@ -48,6 +66,16 @@ export class OrdersControllerBase {
       select: {
         createdAt: true,
         id: true,
+        orderDate: true,
+
+        product: {
+          select: {
+            id: true,
+          },
+        },
+
+        quantity: true,
+        totalPrice: true,
         updatedAt: true,
       },
     });
@@ -64,6 +92,16 @@ export class OrdersControllerBase {
       select: {
         createdAt: true,
         id: true,
+        orderDate: true,
+
+        product: {
+          select: {
+            id: true,
+          },
+        },
+
+        quantity: true,
+        totalPrice: true,
         updatedAt: true,
       },
     });
@@ -85,10 +123,28 @@ export class OrdersControllerBase {
     try {
       return await this.service.updateOrders({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          product: data.product
+            ? {
+                connect: data.product,
+              }
+            : undefined,
+        },
         select: {
           createdAt: true,
           id: true,
+          orderDate: true,
+
+          product: {
+            select: {
+              id: true,
+            },
+          },
+
+          quantity: true,
+          totalPrice: true,
           updatedAt: true,
         },
       });
@@ -114,6 +170,16 @@ export class OrdersControllerBase {
         select: {
           createdAt: true,
           id: true,
+          orderDate: true,
+
+          product: {
+            select: {
+              id: true,
+            },
+          },
+
+          quantity: true,
+          totalPrice: true,
           updatedAt: true,
         },
       });
